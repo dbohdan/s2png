@@ -12,6 +12,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
 #include "gd.h"
 #include "gdfontt.h"
 
@@ -132,9 +135,10 @@ int is_png_file(char *filename)
 {
     char png_sign[8] = {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
     char buf[8];
+    size_t res;
 
     FILE *fp = fopen(filename, "rb"); 
-    fread(buf, 8, 1, fp);
+    res = fread(buf, 8, 1, fp);
     fclose(fp);
 
     if(memcmp(buf, png_sign, 8) == 0)
@@ -154,7 +158,7 @@ void help()
     usage();
     printf("\n\
   -h            display this message and quit\n\
-  -o filename   output the coverted data (image or binary) to filename\n\
+  -o filename   output the converted data (image or binary) to filename\n\
   -w            set the width of PNG image output (600 by default)\n\
 \n\
 See README.md for details.\n");
