@@ -1,7 +1,9 @@
 s2png — “something to png”
 ==========================
 
-This program converts binary files of any kind into new PNG images and vice versa. It was originally developed by k0wax at http://sourceforge.net/projects/s2png/. This fork fixes the problem that causes the s2png 0.01 to segfault when compiled on modern GNU/Linux distributions.
+This program converts binary data files of any kind into PNG images and back. It was originally developed by k0wax at http://sourceforge.net/projects/s2png/. This fork fixes the problem that causes the s2png 0.01 to segfault when compiled on modern GNU/Linux distributions.
+
+It is licensed under GNU GPL 2.0. See the file LICENSE.
 
 Building
 --------
@@ -9,7 +11,7 @@ Building
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
 
     sudo apt-get install libgd2-xpm-dev libgd2-xpm
-
+    
 2. Type "make" in your terminal and hit the enter key.
 
 Building has been tested on Linux Mint 13 and Ubuntu 12.10.
