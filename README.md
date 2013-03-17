@@ -1,9 +1,9 @@
 s2png — “something to png”
 ==========================
 
-This program converts binary data files of any kind into PNG images and back. It was originally developed by k0wax at http://sourceforge.net/projects/s2png/. This fork fixes the problem that causes the s2png 0.01 to segfault when compiled on modern GNU/Linux distributions.
+This program converts binary data files of any kind into PNG images and back. It was originally developed by k0wax at http://sourceforge.net/projects/s2png/. This fork was created to fix the problem that causes s2png 0.01 to segfault when compiled on modern GNU/Linux distributions. It has other minor improvements but remains compatible with the original.
 
-It is licensed under GNU GPL 2.0. See the file LICENSE.
+s2png is licensed under GNU GPL 2.0. See the file LICENSE.
 
 Building
 --------
