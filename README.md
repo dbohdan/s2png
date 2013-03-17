@@ -10,7 +10,7 @@ Building
 
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
 
-```    sudo apt-get install libgd2-xpm-dev libgd2-xpm```
+    sudo apt-get install libgd2-xpm-dev libgd2-xpm
     
 2. Type "make" in your terminal and hit the enter key.
 
