@@ -1,4 +1,4 @@
-s2png — "something to png"
+s2png — “something to png”
 ==========================
 
 This program converts binary files of any kind into new PNG images and vice versa. It was originally developed by k0wax at http://sourceforge.net/projects/s2png/. This fork fixes the problem that causes the s2png 0.01 to segfault when compiled on modern GNU/Linux distributions.

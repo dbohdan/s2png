@@ -106,7 +106,7 @@ int filetopng(char *finfn, char *foutfn, int im_w)
 
     fclose(fin);
 
-    char *s = "This image contains binary data. To extract it use s2png from http://s2png.sf.net";
+    char *s = "This image contains binary data. To extract it get s2png on GitHub.";
     gdImageFilledRectangle(im, 0, gdImageSY(im) - BANNER_HEIGHT,
         im_w - 1, gdImageSY(im) + BANNER_HEIGHT, gdImageColorAllocate(im, 255, 255, 255));
     gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5, gdImageSY(im) - BANNER_HEIGHT,
