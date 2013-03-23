@@ -4,13 +4,13 @@ runtest() {
     testfile=$1
 
     ./s2png $testfile -s -o $testfile.png
-    ./s2png $testfile.png -o $testfile.out2
+    ./s2png $testfile.png -o $testfile.out
 
     ./s2png $testfile -s -o $testfile.png -b "Hello" -p password
-    ./s2png $testfile.png -o $testfile.out -p password
+    ./s2png $testfile.png -o $testfile.out2 -p password
 
-    diff $testfile $testfile.out2 || echo Basic test failed.
-    diff $testfile $testfile.out || echo Encryption test failed.
+    diff $testfile $testfile.out || echo Basic test failed.
+    diff $testfile $testfile.out2 || echo Encryption test failed.
 
     rm $testfile.png $testfile.out $testfile.out2
 }

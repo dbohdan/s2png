@@ -4,9 +4,10 @@
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or   
- *   (at your option) any later version.                                 
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
 */
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -29,15 +30,6 @@
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
-void xor(unsigned char *buffer, int buf_size, int offset, char *password) {
-    int i;
-    int l = strlen(password);
-
-    for (i = 0; i < buf_size; i++) {
-        buffer[i] ^= password[(i + offset) % l];
-    }
-}
-
 int pngtofile(char *finfn, char *foutfn, char *password)
 {
     FILE *fin, *fout;
@@ -56,11 +48,11 @@ int pngtofile(char *finfn, char *foutfn, char *password)
     int x, y;
     int nb = 0;
     rc4_key key;
-            
+
     if (password != NULL) {
         prepare_key(password, strlen(password), &key);
-    }    
-    
+    }
+
     for(y=0; y < gdImageSY(im); y++) {
         for(x=0; x < gdImageSX(im); x++) {
             c = gdImageGetPixel(im, x, y);
@@ -90,27 +82,26 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
 {
     FILE *fin, *fout;
     struct stat fin_stat;
-    struct stat fout_stat;    
-    gdImagePtr im = NULL; 
+    struct stat fout_stat;
+    gdImagePtr im = NULL;
 
     fin = fopen(finfn, "rb");
     fstat(fileno(fin), &fin_stat);
     int data_size = fin_stat.st_size; /* st_size is off_t, which is int. */
     int banner_height = (strcmp(banner, "") == 0 ? 0 : BANNER_HEIGHT);
-    
+
     if (make_square) {
         /* Solve (x - banner_height) * x = data_size / 3.0 for x. */
         image_width = ceil(0.5 * sqrt(4 * (float) data_size / 3.0 + 
                            (float) banner_height * (float) banner_height)
                            + (float) banner_height);
     }
-    
 
     int image_height = ceil(((float) data_size / (float) image_width / 3.0) 
                             + (float) banner_height);
 
     /* printf("%d %d\n", image_width, image_height); */
-                            
+
     im = gdImageCreateTrueColor(image_width, image_height);
 
     unsigned char buf[3];
@@ -119,11 +110,11 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
     int x = 0;
     int y = 0;
     rc4_key key;
-            
+
     if (password != NULL) {
         prepare_key(password, strlen(password), &key);
-    }       
-    
+    }
+
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
         if (password != NULL) {
             rc4(buf, 3, &key);
@@ -160,15 +151,18 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
 
 /*
     int c = gdImageGetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1);
-    int ds = (gdImageRed(im, c) << 8*2) + (gdImageGreen(im, c) << 8*1) + (gdImageBlue(im, c));
+    int ds = (gdImageRed(im, c) << 8*2) + (gdImageGreen(im, c) << 8*1) +
+              (gdImageBlue(im, c));
     printf("debug: ds %d, data_size %d\n", ds, data_size);
-    //printf("c: %d %d %d\n", (data_size & 0xff0000) >> 8*2, (data_size & 0xff00) >> 8*1, data_size & 0xff);
-    //printf("d: %d %d %d\n", (gdImageRed(im, c) << 8*2), (gdImageGreen(im, c) << 8*1), (gdImageBlue(im, c)));
+    //printf("c: %d %d %d\n", (data_size & 0xff0000) >> 8*2,
+             (data_size & 0xff00) >> 8*1, data_size & 0xff);
+    //printf("d: %d %d %d\n", (gdImageRed(im, c) << 8*2),
+             (gdImageGreen(im, c) << 8*1), (gdImageBlue(im, c)));
 */
 
     gdImageDestroy(im);
-    
-    stat(foutfn, &fout_stat);    
+
+    stat(foutfn, &fout_stat);
     return (int) fout_stat.st_size;
 }
 
@@ -178,7 +172,7 @@ int is_png_file(char *filename)
     char buf[8];
     size_t res;
 
-    FILE *fp = fopen(filename, "rb"); 
+    FILE *fp = fopen(filename, "rb");
     res = fread(buf, 8, 1, fp);
     fclose(fp);
 
@@ -220,8 +214,8 @@ int main(int argc, char **argv)
     /* opts */
     char *in_fn = NULL;
     char *out_fn = NULL;
-    char *banner_text = DEFAULT_BANNER;    
-    char *password = NULL;    
+    char *banner_text = DEFAULT_BANNER;
+    char *password = NULL;
     int image_width = 600;
     int make_square = 0;
 
@@ -242,13 +236,13 @@ int main(int argc, char **argv)
                 break;
             case 'p':
                 password = optarg;
-                break;                
+                break;
             case 'h':
                 help();
                 exit(1);
                 break;
         }
-        
+
         /*
         argc -= optind;
         argv += optind;
@@ -256,7 +250,7 @@ int main(int argc, char **argv)
     }
 
     in_fn = argv[argc - 1];
-    if (access(in_fn, R_OK) < 0) { 
+    if (access(in_fn, R_OK) < 0) {
         printf("error: can't open file `%s'\n", in_fn);
         exit(-1);
     }
@@ -279,7 +273,7 @@ int main(int argc, char **argv)
             strcat(out_fn, ".png");
         }
     }
-    
+
     /* printf("in_fn: %s\nout_fn = %s\n", in_fn, out_fn); */
 
     /* check opts */

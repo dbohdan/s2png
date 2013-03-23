@@ -3,10 +3,11 @@
 This implementation of RC4 was created by Adam Back and comes from
 http://www.cypherspace.org/adam/rsa/rc4c.html.
 
-It is assumed to be licensed under the Cypherpunks anti-License,
-see http://www.cypherspace.org/CPL/.
- 
+It is assumed to be in the Public Domain based on the terms of the
+Cypherpunks anti-License. See http://www.cypherspace.org/CPL/.
+
 */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
