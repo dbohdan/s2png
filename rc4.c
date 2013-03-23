@@ -1,10 +1,9 @@
 /*
 
-This code is based on the implementation of RC4 created by Adam Back from
-http://www.cypherspace.org/adam/rsa/rc4c.html.
+This code is based on the implementation of RC4 created by Adam Back.
+The original is available from http://www.cypherspace.org/adam/rsa/rc4c.html.
 
-It is assumed to be in the Public Domain based on the terms of the
-Cypherpunks anti-License. See http://www.cypherspace.org/CPL/.
+It is assumed to be in the Public Domain.
 
 */
 
@@ -13,8 +12,6 @@ Cypherpunks anti-License. See http://www.cypherspace.org/CPL/.
 #include <stdlib.h>
 
 #include "rc4.h"
-
-#define buf_size 1024
 
 #define swap_byte(x,y) t = *(x); *(x) = *(y); *(y) = t
 
@@ -78,6 +75,8 @@ void rc4(unsigned char *buffer_ptr, int buffer_len, rc4_key *key)
 }
 
 /*
+#define buf_size 1024
+
 int main(int argc, char* argv[])
 {
   char seed[256];
