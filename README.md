@@ -1,53 +1,43 @@
 s2png — “something to png”
 ==========================
 
-This program converts binary data files of any kind into PNG images and back. It was originally developed by k0wax at http://sourceforge.net/projects/s2png/. This fork was created to fix the problem that causes s2png 0.01 to segfault when compiled on modern GNU/Linux distributions. It has other minor improvements but remains compatible with the original.
+This program converts binary data files of any kind into PNG images and back. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. This version was created to fix the problem that causes s2png 0.01 to segfault when compiled on modern GNU/Linux distributions. It has other minor improvements but remains compatible with the original.
 
 s2png is licensed under GNU GPL 2.0. See the file LICENSE.
 
-Building
---------
+Building and installing
+-----------------------
 
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
-
-    sudo apt-get install libgd2-xpm-dev libgd2-xpm
+`sudo apt-get install libgd2-xpm-dev libgd2-xpm`.
     
-2. Type "make" in your terminal and hit the enter key.
+2. Type `make` in your terminal and hit the enter key. Building has been tested on Linux Mint 13 and Ubuntu 12.10.
 
-Building has been tested on Linux Mint 13 and Ubuntu 12.10.
-
-Installing
-----------
-
-    sudo make install
-    
-On Debian-derived distributions consider using
-
-    sudo checkinstall
-    
-instead.
+3. Install with `sudo make install`. On Debian-derived distributions use `sudo checkinstall` instead.
 
 Usage
 -----
 
-    usage: s2png [-h] [-o filename] [-w width (600)] file 
-        
+    usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text] file
+
       -h            display this message and quit
       -o filename   output the converted data (image or binary) to filename
-      -w            set the width of PNG image output (600 by default)
+      -w width      set the width of PNG image output (600 by default)
+      -s            make the output image roughly square
+      -b text       custom banner text ("" for no banner)
 
 Basic examples
 --------------
 
-To convert 1.mp3 into an image type the following:
+To convert 1.mp3 into an image type the following in the command line:
 
     s2png 1.mp3
    
-Now you have 1.mp3.png in the same directory as 1.mp3.
+You will now have the file 1.mp3.png in the same directory as 1.mp3.
 
-Suppose you need decode file DecodeMe.mp3.png. Type
+Suppose you need decode DecodeMe.mp3.png. To do so type
 
     s2png DecodeMe.mp3.png
 
-Now you have the original DecodeMe.mp3 in the same directory as DecodeMe.mp3.png.
+The original DecodeMe.mp3 will appear in the same directory as DecodeMe.mp3.png.
 

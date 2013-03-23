@@ -1,6 +1,6 @@
 /*
- *   s2png - "something to png" copyleft (c) 2006 k0wax
- *   Updated in 2013 by dbohdan
+ *   s2png - "something to png" copyright (c) 2006 k0wax
+ *   Updates copyright (c) 2013 by dbohdan
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,18 +18,14 @@
 #include "gd.h"
 #include "gdfontt.h"
 
-#define VERSION_STR ("0.02")
+#define VERSION_STR ("0.03")
 #define VERSION_DATE ("20130317")
 #define BANNER_HEIGHT 8
 #define MODE_ENCODE 1
 #define MODE_DECODE 2
 
-int exists(const char *fn)
-{
-    FILE *t;
-    if((t = fopen(fn, "rb"))) { fclose(t); return 1; }
-    return 0;
-}
+#define DEFAULT_BANNER ("This image contains binary data. \
+To extract it get s2png on GitHub.")
 
 int pngtofile(char *finfn, char *foutfn)
 {
@@ -40,7 +36,8 @@ int pngtofile(char *finfn, char *foutfn)
     fclose(fin);
 
     int c = gdImageGetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1);
-    int data_size = (gdImageRed(im, c) << 8*2) + (gdImageGreen(im, c) << 8*1) + (gdImageBlue(im, c));
+    int data_size = (gdImageRed(im, c) << 8*2) + \
+                    (gdImageGreen(im, c) << 8*1) + (gdImageBlue(im, c));
 
     fout = fopen(foutfn, "wb");
     unsigned char buf[3];
@@ -53,7 +50,7 @@ int pngtofile(char *finfn, char *foutfn)
             buf[0] = gdImageRed(im, c);
             buf[1] = gdImageGreen(im, c);
             buf[2] = gdImageBlue(im, c);
-            if(written_bytes >= data_size) {
+            if (written_bytes >= data_size) {
                 break; /* FIXME */
             } else {
                 nb = written_bytes + 3 > data_size ?
@@ -68,35 +65,45 @@ int pngtofile(char *finfn, char *foutfn)
     return 1;
 }
 
-int filetopng(char *finfn, char *foutfn, int im_w)
+int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
+              char *banner)
 {
     FILE *fin, *fout;
     struct stat fin_stat;
+    struct stat fout_stat;    
     gdImagePtr im = NULL; 
 
     fin = fopen(finfn, "rb");
     fstat(fileno(fin), &fin_stat);
-    long data_size = fin_stat.st_size;
+    int data_size = fin_stat.st_size; /* st_size is off_t, which is int. */
+    int banner_height = (strcmp(banner, "") == 0 ? 0 : BANNER_HEIGHT);
     
-/*
-    // FIXME
-    //int im_h = (data_size) % 3 == 0 ?
-    //    (data_size/3/im_w + BANNER_HEIGHT) : (((data_size+3)/3/im_w) + BANNER_HEIGHT);
-    //printf("data_size %d, im_h %d im_w %d\n", data_size, im_h, im_w);
-*/
-    int im_h = ceil((float) ((float) data_size / (float) im_w / (float) 3) + (float) BANNER_HEIGHT);
-    im = gdImageCreateTrueColor(im_w, im_h);
+    if (make_square) {
+        /* Solve (x - banner_height) * x = data_size / 3 for x. */
+        image_width = ceil(0.5 * sqrt(4 * (float) (data_size / 3) + 
+                           (float) banner_height * (float) banner_height)
+                           + (float) banner_height);
+    }
+    
+
+    int image_height = ceil((float) ((float) data_size / (float) image_width \
+                            / (float) 3) + (float) banner_height);
+
+    printf("%d %d\n", image_width, image_height);
+                            
+    im = gdImageCreateTrueColor(image_width, image_height);
 
     unsigned char buf[3];
     long bytes_read = 0;
     long total_bytes = 0;
     int x = 0;
     int y = 0;
-    while((bytes_read = fread(buf, 1, 3, fin)) > 0) {
+    while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
         total_bytes += bytes_read;
-        gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1], buf[2]));
+        gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],\
+                        buf[2]));
 
-        if(x + 1 < im_w) {
+        if (x + 1 < image_width) {
             x++;
         } else {
             x = 0;
@@ -106,14 +113,17 @@ int filetopng(char *finfn, char *foutfn, int im_w)
 
     fclose(fin);
 
-    char *s = "This image contains binary data. To extract it get s2png on GitHub.";
-    gdImageFilledRectangle(im, 0, gdImageSY(im) - BANNER_HEIGHT,
-        im_w - 1, gdImageSY(im) + BANNER_HEIGHT, gdImageColorAllocate(im, 255, 255, 255));
-    gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5, gdImageSY(im) - BANNER_HEIGHT,
-        s, gdImageColorAllocate(im, 0, 0, 0));
+    char *s = banner;
+    gdImageFilledRectangle(im, 0, gdImageSY(im) - banner_height,
+                           image_width - 1, gdImageSY(im) + banner_height, \
+                           gdImageColorAllocate(im, 255, 255, 255));
+    gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5, \
+                  gdImageSY(im) - banner_height, s, \
+                  gdImageColorAllocate(im, 0, 0, 0));
     /* store data_size in the last pixel */
     gdImageSetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1,
-        gdImageColorAllocate(im, (data_size & 0xff0000) >> 8*2, (data_size & 0xff00) >> 8*1, data_size & 0xff));
+                    gdImageColorAllocate(im, (data_size & 0xff0000) >> 8*2, \
+                    (data_size & 0xff00) >> 8*1, data_size & 0xff));
 
     fout = fopen(foutfn, "wb");
     gdImagePng(im, fout);
@@ -128,7 +138,9 @@ int filetopng(char *finfn, char *foutfn, int im_w)
 */
 
     gdImageDestroy(im);
-    return 1;
+    
+    stat(foutfn, &fout_stat);    
+    return (int) fout_stat.st_size;
 }
 
 int is_png_file(char *filename)
@@ -141,7 +153,7 @@ int is_png_file(char *filename)
     res = fread(buf, 8, 1, fp);
     fclose(fp);
 
-    if(memcmp(buf, png_sign, 8) == 0)
+    if (memcmp(buf, png_sign, 8) == 0)
         return 1;
 
     return 0;
@@ -150,7 +162,8 @@ int is_png_file(char *filename)
 void usage()
 {
     printf("s2png (\"something to png\") version %s\n", VERSION_STR);
-    printf("usage: s2png [-h] [-o filename] [-w width (600)] file\n");
+    printf("usage: s2png [-h] [-o filename] [-w width (600) | -s] \
+[-b text] file\n");
 }
 
 void help()
@@ -159,31 +172,41 @@ void help()
     printf("\n\
   -h            display this message and quit\n\
   -o filename   output the converted data (image or binary) to filename\n\
-  -w            set the width of PNG image output (600 by default)\n\
+  -w width      set the width of PNG image output (600 by default)\n\
+  -s            make the output image roughly square\n\
+  -b text       custom banner text (\"\" for no banner)\n\
 \n\
 See README.md for details.\n");
 }
 
 int main(int argc, char **argv)
 {
-    if(argc < 2) {
+    if (argc < 2) {
         usage();
         exit(1);
     }
 
     /* opts */
     char *in_fn = NULL;
-    char *out_fn = calloc(1, sizeof(char) * 255);
-    int im_w = 600;
+    char *out_fn = NULL;
+    char *banner_text = DEFAULT_BANNER;    
+    int image_width = 600;
+    int make_square = 0;
 
     int ch;
-    while((ch = getopt(argc, argv, "w:o:h")) != -1) {
-        switch(ch) {
+    while ((ch = getopt(argc, argv, "w:o:hsb:")) != -1) {
+        switch (ch) {
             case 'w':
-                im_w = atoi(optarg);
+                image_width = atoi(optarg);
+                break;
+            case 's':
+                make_square = 1;
                 break;
             case 'o':
                 out_fn = optarg;
+                break;
+            case 'b':
+                banner_text = optarg;
                 break;
             case 'h':
                 help();
@@ -198,24 +221,25 @@ int main(int argc, char **argv)
     }
 
     in_fn = argv[argc - 1];
-    if(!exists(in_fn)) { 
+    if (access(in_fn, R_OK) < 0) { 
         printf("error: can't open file `%s'\n", in_fn);
         exit(-1);
     }
 
     int mode = is_png_file(in_fn) ? MODE_DECODE : MODE_ENCODE;
 
-    if(!strlen(out_fn)) {
-        if(mode == MODE_DECODE) {
-            if(strcasecmp((in_fn + strlen(in_fn) - 4), ".png") == 0) {
+    if (!strlen(out_fn)) {
+        if (mode == MODE_DECODE) {
+            if (strcasecmp((in_fn + strlen(in_fn) - 4), ".png") == 0) {
                 strncpy(out_fn, in_fn, strlen(in_fn) - 4);
             } else {
                 strcpy(out_fn, in_fn);
                 strcat(out_fn, ".orig");
-                fprintf(stderr, "warn: file `%s' will be saved as `%s'\n", in_fn, out_fn);
+                fprintf(stderr, "warn: file `%s' will be saved as `%s'\n", \
+                        in_fn, out_fn);
             }
         }
-        else if(mode == MODE_ENCODE) {
+        else if (mode == MODE_ENCODE) {
             strcpy(out_fn, in_fn);
             strcat(out_fn, ".png");
         }
@@ -225,22 +249,22 @@ int main(int argc, char **argv)
 
     /* check opts */
     char *err = calloc(1, sizeof(char) * 255);
-    if(!im_w && mode == MODE_ENCODE) {
+    if (!image_width && mode == MODE_ENCODE) {
         strcpy(err, "image width not set or invalid");
-    } else if(!in_fn) {
+    } else if (!in_fn) {
         strcpy(err, "no input file");
-    } else if(!out_fn) {
+    } else if (!out_fn) {
         strcpy(err, "no output file");
     }
 
-    if(strlen(err) > 0) {
+    if (strlen(err) > 0) {
         fprintf(stderr, "%s, see -h option for help\n", err);
         exit(-1);
     }
 
 
-    if(mode == MODE_ENCODE) {
-        filetopng(in_fn, out_fn, im_w);
+    if (mode == MODE_ENCODE) {
+        filetopng(in_fn, out_fn, image_width, make_square, banner_text);
     } else if (mode == MODE_DECODE) {
         pngtofile(in_fn, out_fn);
     } else {
