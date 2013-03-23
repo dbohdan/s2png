@@ -15,11 +15,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
 #include "gd.h"
 #include "gdfontt.h"
+#include "rc4.h"
 
-#define VERSION_STR ("0.03")
-#define VERSION_DATE ("20130317")
+#define VERSION_STR ("0.04")
+#define VERSION_DATE ("20130323")
 #define BANNER_HEIGHT 8
 #define MODE_ENCODE 1
 #define MODE_DECODE 2
@@ -27,7 +29,16 @@
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
-int pngtofile(char *finfn, char *foutfn)
+void xor(unsigned char *buffer, int buf_size, int offset, char *password) {
+    int i;
+    int l = strlen(password);
+
+    for (i = 0; i < buf_size; i++) {
+        buffer[i] ^= password[(i + offset) % l];
+    }
+}
+
+int pngtofile(char *finfn, char *foutfn, char *password)
 {
     FILE *fin, *fout;
     struct stat fin_stat;
@@ -44,17 +55,26 @@ int pngtofile(char *finfn, char *foutfn)
     long written_bytes = 0;
     int x, y;
     int nb = 0;
+    rc4_key key;
+            
+    if (password != NULL) {
+        prepare_key(password, strlen(password), &key);
+    }    
+    
     for(y=0; y < gdImageSY(im); y++) {
         for(x=0; x < gdImageSX(im); x++) {
             c = gdImageGetPixel(im, x, y);
             buf[0] = gdImageRed(im, c);
             buf[1] = gdImageGreen(im, c);
             buf[2] = gdImageBlue(im, c);
+            if (password != NULL) {
+                rc4(buf, 3, &key);
+            }
             if (written_bytes >= data_size) {
                 break; /* FIXME */
             } else {
-                nb = written_bytes + 3 > data_size ?
-                    data_size - written_bytes : 3;
+                nb = (written_bytes + 3 > data_size ?
+                     data_size - written_bytes : 3);
                 written_bytes += fwrite(buf, 1, nb, fout);
             }
         }
@@ -66,7 +86,7 @@ int pngtofile(char *finfn, char *foutfn)
 }
 
 int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
-              char *banner)
+              char *banner, char *password)
 {
     FILE *fin, *fout;
     struct stat fin_stat;
@@ -79,17 +99,17 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
     int banner_height = (strcmp(banner, "") == 0 ? 0 : BANNER_HEIGHT);
     
     if (make_square) {
-        /* Solve (x - banner_height) * x = data_size / 3 for x. */
-        image_width = ceil(0.5 * sqrt(4 * (float) (data_size / 3) + 
+        /* Solve (x - banner_height) * x = data_size / 3.0 for x. */
+        image_width = ceil(0.5 * sqrt(4 * (float) data_size / 3.0 + 
                            (float) banner_height * (float) banner_height)
                            + (float) banner_height);
     }
     
 
-    int image_height = ceil((float) ((float) data_size / (float) image_width \
-                            / (float) 3) + (float) banner_height);
+    int image_height = ceil(((float) data_size / (float) image_width / 3.0) 
+                            + (float) banner_height);
 
-    printf("%d %d\n", image_width, image_height);
+    /* printf("%d %d\n", image_width, image_height); */
                             
     im = gdImageCreateTrueColor(image_width, image_height);
 
@@ -98,7 +118,16 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
     long total_bytes = 0;
     int x = 0;
     int y = 0;
+    rc4_key key;
+            
+    if (password != NULL) {
+        prepare_key(password, strlen(password), &key);
+    }       
+    
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
+        if (password != NULL) {
+            rc4(buf, 3, &key);
+        }
         total_bytes += bytes_read;
         gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],\
                         buf[2]));
@@ -162,8 +191,8 @@ int is_png_file(char *filename)
 void usage()
 {
     printf("s2png (\"something to png\") version %s\n", VERSION_STR);
-    printf("usage: s2png [-h] [-o filename] [-w width (600) | -s] \
-[-b text] file\n");
+    printf("usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]\n\
+             [-p password] file\n");
 }
 
 void help()
@@ -175,6 +204,8 @@ void help()
   -w width      set the width of PNG image output (600 by default)\n\
   -s            make the output image roughly square\n\
   -b text       custom banner text (\"\" for no banner)\n\
+  -p password   encrypt/decrypt the output with password using RC4\n\
+                (Warning: do not use this if you need actual security!)\n\
 \n\
 See README.md for details.\n");
 }
@@ -190,11 +221,12 @@ int main(int argc, char **argv)
     char *in_fn = NULL;
     char *out_fn = NULL;
     char *banner_text = DEFAULT_BANNER;    
+    char *password = NULL;    
     int image_width = 600;
     int make_square = 0;
 
     int ch;
-    while ((ch = getopt(argc, argv, "w:o:hsb:")) != -1) {
+    while ((ch = getopt(argc, argv, "w:o:hsb:p:")) != -1) {
         switch (ch) {
             case 'w':
                 image_width = atoi(optarg);
@@ -208,6 +240,9 @@ int main(int argc, char **argv)
             case 'b':
                 banner_text = optarg;
                 break;
+            case 'p':
+                password = optarg;
+                break;                
             case 'h':
                 help();
                 exit(1);
@@ -264,9 +299,10 @@ int main(int argc, char **argv)
 
 
     if (mode == MODE_ENCODE) {
-        filetopng(in_fn, out_fn, image_width, make_square, banner_text);
+        filetopng(in_fn, out_fn, image_width, make_square, banner_text, \
+                  password);
     } else if (mode == MODE_DECODE) {
-        pngtofile(in_fn, out_fn);
+        pngtofile(in_fn, out_fn, password);
     } else {
         fprintf(stderr, "internal error: unknown mode\n");
         exit(-2);
