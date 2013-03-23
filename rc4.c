@@ -1,6 +1,6 @@
 /*
 
-This implementation of RC4 was created by Adam Back and comes from
+This code is based on the implementation of RC4 created by Adam Back from
 http://www.cypherspace.org/adam/rsa/rc4c.html.
 
 It is assumed to be in the Public Domain based on the terms of the
@@ -41,6 +41,16 @@ void prepare_key(unsigned char *key_data_ptr, int key_data_len, rc4_key *key)
     swap_byte(&state[counter], &state[index2]);
     index1 = (index1 + 1) % key_data_len;
   }
+}
+
+void drop_n(int n, rc4_key *key)
+{
+    if (n > 0)
+    {
+        unsigned char* temp = calloc(n, sizeof(unsigned char));
+        rc4(temp, n, key);
+        free(temp);
+    }
 }
 
 void rc4(unsigned char *buffer_ptr, int buffer_len, rc4_key *key)

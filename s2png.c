@@ -27,6 +27,8 @@
 #define MODE_ENCODE 1
 #define MODE_DECODE 2
 
+#define RC4_DROP_N 3072
+
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
@@ -51,6 +53,7 @@ int pngtofile(char *finfn, char *foutfn, char *password)
 
     if (password != NULL) {
         prepare_key(password, strlen(password), &key);
+        drop_n(RC4_DROP_N, &key);
     }
 
     for(y=0; y < gdImageSY(im); y++) {
@@ -113,6 +116,7 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
 
     if (password != NULL) {
         prepare_key(password, strlen(password), &key);
+        drop_n(RC4_DROP_N, &key);      
     }
 
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
@@ -257,7 +261,7 @@ int main(int argc, char **argv)
 
     int mode = is_png_file(in_fn) ? MODE_DECODE : MODE_ENCODE;
 
-    if (!strlen(out_fn)) {
+    if (out_fn == NULL) {
         if (mode == MODE_DECODE) {
             if (strcasecmp((in_fn + strlen(in_fn) - 4), ".png") == 0) {
                 strncpy(out_fn, in_fn, strlen(in_fn) - 4);
@@ -267,8 +271,8 @@ int main(int argc, char **argv)
                 fprintf(stderr, "warn: file `%s' will be saved as `%s'\n", \
                         in_fn, out_fn);
             }
-        }
-        else if (mode == MODE_ENCODE) {
+        } else if (mode == MODE_ENCODE) {
+            out_fn = calloc(strlen(in_fn) + 4, sizeof(char));
             strcpy(out_fn, in_fn);
             strcat(out_fn, ".png");
         }
