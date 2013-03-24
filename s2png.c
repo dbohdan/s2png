@@ -23,7 +23,6 @@
 #include "rc4.h"
 
 #define VERSION_STR ("0.04")
-#define VERSION_DATE ("20130323")
 #define BANNER_HEIGHT 8
 #define MODE_ENCODE 1
 #define MODE_DECODE 2
@@ -33,7 +32,7 @@
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
-void initrc4(char *password, rc4_key *key)
+void init_rc4(char *password, rc4_key *key)
 {
     if (password != NULL) {
         int n;
@@ -44,7 +43,7 @@ void initrc4(char *password, rc4_key *key)
     }
 }
 
-int pngtofile(char *finfn, char *foutfn, char *password)
+int png_to_file(char *finfn, char *foutfn, char *password)
 {
     FILE *fin, *fout;
     struct stat fin_stat;
@@ -53,7 +52,7 @@ int pngtofile(char *finfn, char *foutfn, char *password)
     fclose(fin);
 
     int c = gdImageGetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1);
-    int data_size = (gdImageRed(im, c) << 8*2) + \
+    int data_size = (gdImageRed(im, c) << 8*2) +
                     (gdImageGreen(im, c) << 8*1) + (gdImageBlue(im, c));
 
     fout = fopen(foutfn, "wb");
@@ -63,7 +62,7 @@ int pngtofile(char *finfn, char *foutfn, char *password)
     int nb = 0;
 
     rc4_key key;
-    initrc4(password, &key);
+    init_rc4(password, &key);
 
 
     for(y=0; y < gdImageSY(im); y++) {
@@ -90,7 +89,7 @@ int pngtofile(char *finfn, char *foutfn, char *password)
     return 1;
 }
 
-int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
+int file_to_png(char *finfn, char *foutfn, int image_width, int make_square,
               char *banner, char *password)
 {
     FILE *fin, *fout;
@@ -124,14 +123,14 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
     int y = 0;
 
     rc4_key key;
-    initrc4(password, &key);
+    init_rc4(password, &key);
 
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
         if (password != NULL) {
             rc4(buf, 3, &key);
         }
         total_bytes += bytes_read;
-        gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],\
+        gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],
                         buf[2]));
 
         if (x + 1 < image_width) {
@@ -146,14 +145,14 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
 
     char *s = banner;
     gdImageFilledRectangle(im, 0, gdImageSY(im) - banner_height,
-                           image_width - 1, gdImageSY(im) + banner_height, \
+                           image_width - 1, gdImageSY(im) + banner_height,
                            gdImageColorAllocate(im, 255, 255, 255));
-    gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5, \
-                  gdImageSY(im) - banner_height, s, \
+    gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5,
+                  gdImageSY(im) - banner_height, s,
                   gdImageColorAllocate(im, 0, 0, 0));
     /* store data_size in the last pixel */
     gdImageSetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1,
-                    gdImageColorAllocate(im, (data_size & 0xff0000) >> 8*2, \
+                    gdImageColorAllocate(im, (data_size & 0xff0000) >> 8*2,
                     (data_size & 0xff00) >> 8*1, data_size & 0xff));
 
     fout = fopen(foutfn, "wb");
@@ -275,7 +274,7 @@ int main(int argc, char **argv)
             } else {
                 strcpy(out_fn, in_fn);
                 strcat(out_fn, ".orig");
-                fprintf(stderr, "warn: file `%s' will be saved as `%s'\n", \
+                fprintf(stderr, "warn: file `%s' will be saved as `%s'\n",
                         in_fn, out_fn);
             }
         } else if (mode == MODE_ENCODE) {
@@ -304,10 +303,10 @@ int main(int argc, char **argv)
 
 
     if (mode == MODE_ENCODE) {
-        filetopng(in_fn, out_fn, image_width, make_square, banner_text, \
-                  password);
+        file_to_png(in_fn, out_fn, image_width, make_square, banner_text,
+                    password);
     } else if (mode == MODE_DECODE) {
-        pngtofile(in_fn, out_fn, password);
+        png_to_file(in_fn, out_fn, password);
     } else {
         fprintf(stderr, "internal error: unknown mode\n");
         exit(EX_SOFTWARE);
