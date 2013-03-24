@@ -32,6 +32,17 @@
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
+void initrc4(char *password, rc4_key *key)
+{
+    if (password != NULL) {
+        int n;
+        char seed[256];
+        n = pass_hash(password, seed);
+        prepare_key(seed, n, key);
+        drop_n(RC4_DROP_N, key);      
+    }
+}
+
 int pngtofile(char *finfn, char *foutfn, char *password)
 {
     FILE *fin, *fout;
@@ -49,12 +60,10 @@ int pngtofile(char *finfn, char *foutfn, char *password)
     long written_bytes = 0;
     int x, y;
     int nb = 0;
-    rc4_key key;
 
-    if (password != NULL) {
-        prepare_key(password, strlen(password), &key);
-        drop_n(RC4_DROP_N, &key);
-    }
+    rc4_key key;
+    initrc4(password, &key);
+
 
     for(y=0; y < gdImageSY(im); y++) {
         for(x=0; x < gdImageSX(im); x++) {
@@ -112,12 +121,9 @@ int filetopng(char *finfn, char *foutfn, int image_width, int make_square,
     long total_bytes = 0;
     int x = 0;
     int y = 0;
-    rc4_key key;
 
-    if (password != NULL) {
-        prepare_key(password, strlen(password), &key);
-        drop_n(RC4_DROP_N, &key);      
-    }
+    rc4_key key;
+    initrc4(password, &key);
 
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
         if (password != NULL) {

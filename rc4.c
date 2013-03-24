@@ -1,9 +1,9 @@
 /*
 
-This code is based on the implementation of RC4 created by Adam Back.
+This code is based on the implementation of RC4 created by John Allen.
 The original is available from http://www.cypherspace.org/adam/rsa/rc4c.html.
 
-It is assumed to be in the Public Domain.
+It is believed to be in the Public Domain.
 
 */
 
@@ -74,16 +74,46 @@ void rc4(unsigned char *buffer_ptr, int buffer_len, rc4_key *key)
   key->y = y;
 }
 
+int pass_hash(char* indata, char *seed)
+{
+  char data[512];
+  char digit[5];
+  int hex;
+  int i;
+  int len;
+  strcpy(data, indata);
+  len = strlen(data);
+  
+  if (len & 1)
+  {
+    strcat(data, "0");
+    len++;
+  }
+  
+  len /= 2;
+  
+  strcpy(digit, "AA");
+  digit[4] = '\0';
+  
+  for (i = 0; i < len; i++)
+  {
+    digit[2] = data[i * 2];
+    digit[3] = data[i * 2 + 1];
+    sscanf(digit, "%x", &hex);
+    seed[i] = hex;
+  }
+  
+  return len;
+}
+
 /*
 #define buf_size 1024
 
 int main(int argc, char* argv[])
 {
   char seed[256];
-  char data[512];
   char buf[buf_size];
-  char digit[5];
-  int hex, rd,i;
+  int rd;
   int n;
   rc4_key key;
 
@@ -92,31 +122,17 @@ int main(int argc, char* argv[])
     fprintf(stderr,"%s key <in >out\n",argv[0]);
     exit(1);
   }
-  strcpy(data,argv[1]);
-  n = strlen(data);
-  if (n&1)
-  {
-    strcat(data,"0");
-    n++;
-  }
-  n/=2;
-  strcpy(digit,"AA");
-  digit[4]='\0';
-  for (i=0;i<n;i++)
-  {
-    digit[2] = data[i*2];
-    digit[3] = data[i*2+1];
-    sscanf(digit,"%x",&hex);
-    seed[i] = hex;
-  }
+  
+  n = passhash(argv[1], seed);
 
-  prepare_key(seed,n,&key);
-  rd = fread(buf,1,buf_size,stdin);
-  while (rd>0)
+  prepare_key(seed, n, &key);
+  
+  rd = fread(buf, 1, buf_size, stdin);
+  while (rd > 0)
   {
-    rc4(buf,rd,&key);
-    fwrite(buf,1,rd,stdout);
-    rd = fread(buf,1,buf_size,stdin);
+    rc4(buf, rd, &key);
+    fwrite(buf, 1, rd, stdout);
+    rd = fread(buf, 1, buf_size, stdin);
   }
 }
 */
