@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <sysexits.h>
 
 #include "gd.h"
 #include "gdfontt.h"
@@ -218,7 +219,7 @@ int main(int argc, char **argv)
 {
     if (argc < 2) {
         usage();
-        exit(1);
+        exit(EX_USAGE);
     }
 
     /* opts */
@@ -249,7 +250,7 @@ int main(int argc, char **argv)
                 break;
             case 'h':
                 help();
-                exit(1);
+                exit(EX_OK);
                 break;
         }
 
@@ -262,7 +263,7 @@ int main(int argc, char **argv)
     in_fn = argv[argc - 1];
     if (access(in_fn, R_OK) < 0) {
         printf("error: can't open file `%s'\n", in_fn);
-        exit(-1);
+        exit(EX_NOINPUT);
     }
 
     int mode = is_png_file(in_fn) ? MODE_DECODE : MODE_ENCODE;
@@ -298,7 +299,7 @@ int main(int argc, char **argv)
 
     if (strlen(err) > 0) {
         fprintf(stderr, "%s, see -h option for help\n", err);
-        exit(-1);
+        exit(EX_USAGE);
     }
 
 
@@ -309,8 +310,8 @@ int main(int argc, char **argv)
         pngtofile(in_fn, out_fn, password);
     } else {
         fprintf(stderr, "internal error: unknown mode\n");
-        exit(-2);
+        exit(EX_SOFTWARE);
     }
 
-    return 0;
+    return EX_OK;
 }
