@@ -218,7 +218,7 @@ int main(int argc, char **argv)
 {
     if (argc < 2) {
         usage();
-        exit(EX_USAGE);
+        return EX_USAGE;
     }
 
     /* opts */
@@ -249,7 +249,7 @@ int main(int argc, char **argv)
                 break;
             case 'h':
                 help();
-                exit(EX_OK);
+                return EX_OK;
                 break;
         }
 
@@ -260,9 +260,9 @@ int main(int argc, char **argv)
     }
 
     in_fn = argv[argc - 1];
-    if (access(in_fn, R_OK) < 0) {
+    if (access(in_fn, R_OK) != 0) {
         printf("error: can't open file `%s'\n", in_fn);
-        exit(EX_NOINPUT);
+        return EX_NOINPUT;
     }
 
     int mode = is_png_file(in_fn) ? MODE_DECODE : MODE_ENCODE;
@@ -298,7 +298,7 @@ int main(int argc, char **argv)
 
     if (strlen(err) > 0) {
         fprintf(stderr, "%s, see -h option for help\n", err);
-        exit(EX_USAGE);
+        return EX_USAGE;
     }
 
 
@@ -309,7 +309,7 @@ int main(int argc, char **argv)
         png_to_file(in_fn, out_fn, password);
     } else {
         fprintf(stderr, "internal error: unknown mode\n");
-        exit(EX_SOFTWARE);
+        return EX_SOFTWARE;
     }
 
     return EX_OK;
