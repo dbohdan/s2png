@@ -18,21 +18,7 @@ Building and installing
 Usage
 -----
 
-    s2png ("something to png") version 0.05
-    usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
-                 [-p password] [-e | -d] file
-    
-      -h            display this message and quit
-      -o filename   output the converted data (image or binary) to filename
-      -w width      set the width of PNG image output (600 by default)
-      -s            make the output image roughly square
-      -b text       custom banner text ("" for no banner)
-      -p password   encrypt/decrypt the output with password using RC4
-                    (Warning: do not use this if you need actual security!)
-      -e            force encoding mode avoiding file type detection 
-      -d            force decoding mode
-    
-    See README.md for details.
+S2PNGHELP
 
 Basic examples
 --------------

@@ -1,0 +1,10 @@
+description-pak
+doc-pak
+s2png
+*.deb
+*.png
+python github flavored markdown.py
+s2png.o
+rc4.o
+core
+

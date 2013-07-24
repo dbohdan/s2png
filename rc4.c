@@ -15,11 +15,10 @@ It is believed to be in the Public Domain.
 
 #define swap_byte(x,y) t = *(x); *(x) = *(y); *(y) = t
 
-void prepare_key(unsigned char *key_data_ptr, int key_data_len, rc4_key *key)
+void prepare_key(unsigned char *key_data_ptr, int key_data_len,
+                 struct rc4_key *key)
 {
-    int i;
     unsigned char t;
-    unsigned char swapByte;
     unsigned char index1;
     unsigned char index2;
     unsigned char* state;
@@ -40,7 +39,7 @@ void prepare_key(unsigned char *key_data_ptr, int key_data_len, rc4_key *key)
     }
 }
 
-void drop_n(int n, rc4_key *key)
+void drop_n(int n, struct rc4_key *key)
 {
         if (n > 0)
         {
@@ -50,7 +49,7 @@ void drop_n(int n, rc4_key *key)
         }
 }
 
-void rc4(unsigned char *buffer_ptr, int buffer_len, rc4_key *key)
+void rc4(unsigned char *buffer_ptr, int buffer_len, struct rc4_key *key)
 {
     unsigned char t;
     unsigned char x;
@@ -74,7 +73,7 @@ void rc4(unsigned char *buffer_ptr, int buffer_len, rc4_key *key)
     key->y = y;
 }
 
-int pass_hash(char* indata, char *seed)
+int pass_hash(char* indata, unsigned char *seed)
 {
     char data[512];
     char digit[5];
@@ -116,7 +115,7 @@ int main(int argc, char* argv[])
     char buf[buf_size];
     int rd;
     int n;
-    rc4_key key;
+    struct rc4_key key;
 
     if (argc < 2)
     {
@@ -124,7 +123,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     
-    n = passhash(argv[1], seed);
+    n = pass_hash(argv[1], seed);
 
     prepare_key(seed, n, &key);
     
