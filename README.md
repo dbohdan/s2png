@@ -9,11 +9,11 @@ Building and installing
 -----------------------
 
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
-`sudo apt-get install libgd2-xpm-dev libgd2-xpm`.
+`sudo apt-get install libgd2-xpm-dev libgd2-xpm libpng-dev`. On FreeBSD you will need to install `graphics/gd` and `graphics/png`.
     
-2. Type `make` in your terminal and hit the enter key. Building has been tested on Linux Mint 13 and Ubuntu 12.10.
+2. Type `make` in your terminal and hit the enter key. Building has been tested on Linux Mint 13, Ubuntu 12.10 and FreeBSD 9.1-RELEASE.
 
-3. Install with `sudo make install`. On Debian-derived distributions use `sudo checkinstall` instead.
+3. Install with `sudo make install`. On Debian-derived Linux distributions use `sudo checkinstall` instead.
 
 Usage
 -----
@@ -22,6 +22,9 @@ Usage
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     
+    Store any data in a PNG image.
+    This version can encode files of up to 16777215 bytes.
+    
       -h            display this message and quit
       -o filename   output the converted data (image or binary) to filename
       -w width      set the width of PNG image output (600 by default)
@@ -29,10 +32,10 @@ Usage
       -b text       custom banner text ("" for no banner)
       -p password   encrypt/decrypt the output with password using RC4
                     (Warning: do not use this if you need actual security!)
-      -e            force encoding mode avoiding file type detection 
+    Normally s2png detects which operation to perform by file type. You can
+    circumvent this with the following switches:
+      -e            force encoding mode
       -d            force decoding mode
-    
-    See README.md for details.
 
 Basic examples
 --------------

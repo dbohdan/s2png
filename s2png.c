@@ -29,6 +29,7 @@
 #define MODE_DECODE 2
 
 #define RC4_DROP_N 3072
+#define MAX_FILE_SIZE 0xFFFFFF
 
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
@@ -52,11 +53,13 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
     gdImagePtr im = gdImageCreateFromPng(fin);
     fclose(fin);
 
+    /* Has libgd been about to read and interpret fin? */
     if (im == NULL) {
         fprintf(stderr, "error: file `%s' not readable as PNG\n", fin_fn);
         return EX_DATAERR;
     }
 
+    /* Get data size from the bottom right pixel of the image. */
     int c = gdImageGetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1);
     int data_size = (gdImageRed(im, c) << 8*2) +
                     (gdImageGreen(im, c) << 8*1) + (gdImageBlue(im, c));
@@ -76,7 +79,7 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
     struct rc4_key key;
     init_rc4(password, &key);
 
-
+    /* For each pixel of the image... */
     for (y = 0; y < gdImageSY(im); y++) {
         for (x = 0; x < gdImageSX(im); x++) {
             c = gdImageGetPixel(im, x, y);
@@ -112,6 +115,14 @@ int file_to_png(char *fin_fn, char *fout_fn, int image_width,
     fin = fopen(fin_fn, "rb");
     fstat(fileno(fin), &fin_stat);
     int data_size = fin_stat.st_size; /* st_size is off_t, which is int. */
+    if (data_size > MAX_FILE_SIZE) {
+        fprintf(stderr,
+                "error: file `%s' too large to encode (over %u bytes)\n",
+                fin_fn, MAX_FILE_SIZE);
+        return EX_DATAERR;
+    }
+
+    /* If given no banner text hide the banner. */
     int banner_height = (strcmp(banner, "") == 0 ? 0 : BANNER_HEIGHT);
 
     if (make_square) {
@@ -124,7 +135,13 @@ int file_to_png(char *fin_fn, char *fout_fn, int image_width,
     int image_height = ceil(((float) data_size / (float) image_width / 3.0)
                             + (float) banner_height);
 
-    /* printf("%d %d\n", image_width, image_height); */
+    /* Prevent data corruption on images with no banner where the bottom
+       right pixel is used for data and could get overwritten by the file
+       size pixel. */
+    if (banner_height == 0 &&
+        image_width * image_height * 3 - data_size <= 2) {
+        image_width++;
+    }
 
     im = gdImageCreateTrueColor(image_width, image_height);
 
@@ -137,6 +154,7 @@ int file_to_png(char *fin_fn, char *fout_fn, int image_width,
     struct rc4_key key;
     init_rc4(password, &key);
 
+    /* Read the input file in sets of three bytes. */
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
         if (password != NULL) {
             rc4(buf, 3, &key);
@@ -145,6 +163,7 @@ int file_to_png(char *fin_fn, char *fout_fn, int image_width,
         gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],
                         buf[2]));
 
+        /* Arrange the input data on a 2D grid of the image. */
         if (x + 1 < image_width) {
             x++;
         } else {
@@ -155,6 +174,7 @@ int file_to_png(char *fin_fn, char *fout_fn, int image_width,
 
     fclose(fin);
 
+    /* Add a banner at the bottom of the image. */
     char *s = banner;
     gdImageFilledRectangle(im, 0, gdImageSY(im) - banner_height,
                            image_width - 1, gdImageSY(im) + banner_height,
@@ -162,11 +182,12 @@ int file_to_png(char *fin_fn, char *fout_fn, int image_width,
     gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5,
                   gdImageSY(im) - banner_height, (unsigned char *) s,
                   gdImageColorAllocate(im, 0, 0, 0));
-    /* store data_size in the last pixel */
+    /* Store data_size in the bottom right ("last") pixel. */
     gdImageSetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1,
                     gdImageColorAllocate(im, (data_size & 0xff0000) >> 8*2,
                     (data_size & 0xff00) >> 8*1, data_size & 0xff));
 
+    /* Save the created image to a PNG file. */
     fout = fopen(fout_fn, "wb");
     if (fout == NULL) {
         fprintf(stderr, "error: cannot open file `%s' for output\n",
@@ -212,7 +233,11 @@ void usage()
 void help()
 {
     usage();
-    printf("\n\
+    printf("\
+\n\
+Store any data in a PNG image.\n\
+This version can encode files of up to %u bytes.\n\
+\n\
   -h            display this message and quit\n\
   -o filename   output the converted data (image or binary) to filename\n\
   -w width      set the width of PNG image output (600 by default)\n\
@@ -220,10 +245,12 @@ void help()
   -b text       custom banner text (\"\" for no banner)\n\
   -p password   encrypt/decrypt the output with password using RC4\n\
                 (Warning: do not use this if you need actual security!)\n\
-  -e            force encoding mode avoiding file type detection \n\
+Normally s2png detects which operation to perform by file type. You can\n\
+circumvent this with the following switches:\n\
+  -e            force encoding mode\n\
   -d            force decoding mode\n\
 \n\
-See README.md for details.\n");
+See README.md for further details.\n", MAX_FILE_SIZE);
 }
 
 int main(int argc, char **argv)
@@ -233,7 +260,6 @@ int main(int argc, char **argv)
         return EX_USAGE;
     }
 
-    /* opts */
     char *in_fn = NULL;
     char *out_fn = NULL;
     char *banner_text = DEFAULT_BANNER;
@@ -242,6 +268,7 @@ int main(int argc, char **argv)
     int make_square = 0;
     int mode = MODE_NONE;
 
+    /* Process command line options. */
     int ch;
     while ((ch = getopt(argc, argv, "w:o:hsb:p:ed")) != -1) {
         switch (ch) {
@@ -279,15 +306,20 @@ int main(int argc, char **argv)
     }
 
     in_fn = argv[argc - 1];
+
+    /* Does the input file exist? */
     if (access(in_fn, R_OK) != 0) {
         fprintf(stderr, "error: can't open file `%s'\n", in_fn);
         return EX_NOINPUT;
     }
 
+    /* If we weren't specified what operation to perform explicitly through
+     * command line options we decide based on file type. */
     if (mode == MODE_NONE) {
         mode = is_png_file(in_fn) ? MODE_DECODE : MODE_ENCODE;
     }
 
+    /* If no output file name was given we generate one. */
     if (out_fn == NULL) {
         out_fn = calloc(strlen(in_fn) + strlen(".orig"), sizeof(char));
         if (mode == MODE_DECODE) {
@@ -305,16 +337,11 @@ int main(int argc, char **argv)
         }
     }
 
-    /* printf("in_fn: %s\nout_fn = %s\n", in_fn, out_fn); */
-
-    /* check opts */
+    /* Check for invalid image width. This code has provisions for reporting
+       other misc. errors. */
     char *err = calloc(1, sizeof(char) * 255);
     if (!image_width && mode == MODE_ENCODE) {
         strcpy(err, "image width not set or invalid");
-    } else if (!in_fn) {
-        strcpy(err, "no input file");
-    } else if (!out_fn) {
-        strcpy(err, "no output file");
     }
 
     if (strlen(err) > 0) {
@@ -322,7 +349,7 @@ int main(int argc, char **argv)
         return EX_USAGE;
     }
 
-
+    /* Perform the chosen operation. */
     if (mode == MODE_ENCODE) {
         file_to_png(in_fn, out_fn, image_width, make_square, banner_text,
                     password);

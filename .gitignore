@@ -3,7 +3,8 @@ doc-pak
 s2png
 *.deb
 *.png
-python github flavored markdown.py
+pymd.py
+README.html
 s2png.o
 rc4.o
 core

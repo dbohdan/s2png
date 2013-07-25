@@ -1,11 +1,12 @@
-CFLAGS=-g -O2 -Wall
+CFLAGS=-g -O2 -Wall -I/usr/local/include/
+LDFLAGS=-L/usr/local/lib/
 INCS = `libpng-config --cflags`
-LIBS = `libpng-config --libs` -lgd -lm
+LIBS = `libpng-config --libs` -lgd
 
 all: test readme
 
-s2png: rc4.o s2png.o
-	$(CC) $^ -o $@ $(CFLAGS) $(INCS) $(LIBS)
+s2png:
+	$(CC) -o s2png rc4.c s2png.c $(CFLAGS) $(LDFLAGS) $(INCS) $(LIBS)
 
 install:
 	cp s2png /usr/local/bin
