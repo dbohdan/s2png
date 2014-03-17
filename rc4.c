@@ -80,21 +80,21 @@ int pass_hash(char* indata, unsigned char *seed)
     int hex;
     int i;
     int len;
-    
+
     strcpy(data, indata);
     len = strlen(data);
-    
+
     if (len & 1)
     {
         strcat(data, "0");
         len++;
     }
-    
+
     len /= 2;
-    
+
     strcpy(digit, "AA");
     digit[4] = '\0';
-    
+
     for (i = 0; i < len; i++)
     {
         digit[2] = data[i * 2];
@@ -102,7 +102,7 @@ int pass_hash(char* indata, unsigned char *seed)
         sscanf(digit, "%x", &hex);
         seed[i] = hex;
     }
-    
+
     return len;
 }
 
@@ -122,11 +122,11 @@ int main(int argc, char* argv[])
         fprintf(stderr, "%s key <in >out\n", argv[0]);
         return 1;
     }
-    
+
     n = pass_hash(argv[1], seed);
 
     prepare_key(seed, n, &key);
-    
+
     rd = fread(buf, 1, buf_size, stdin);
     while (rd > 0)
     {
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
         fwrite(buf, 1, rd, stdout);
         rd = fread(buf, 1, buf_size, stdin);
     }
-    
+
     return 0;
 }
 */
