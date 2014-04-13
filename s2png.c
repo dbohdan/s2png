@@ -1,6 +1,6 @@
 /*
  *   s2png - "something to png" copyright (c) 2006 k0wax
- *   Updates copyright (c) 2013 dbohdan
+ *   Changes copyright (c) 2013, 2014 dbohdan
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
     gdImagePtr im = gdImageCreateFromPng(fin);
     fclose(fin);
 
-    /* Has libgd been about to read and interpret fin? */
+    /* Has libgd been able to read and interpret fin? */
     if (im == NULL) {
         fprintf(stderr, "error: file `%s' not readable as PNG\n", fin_fn);
         return EX_DATAERR;
@@ -225,7 +225,7 @@ int is_png_file(char *filename)
 
 void usage()
 {
-    printf("s2png (\"something to png\") version %s\n", VERSION_STR);
+    printf("s2png (\"stuff to png\") version %s\n", VERSION_STR);
     printf("usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]\n\
              [-p password] [-e | -d] file\n");
 }

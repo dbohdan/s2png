@@ -18,7 +18,7 @@ Building and installing
 Usage
 -----
 
-    s2png ("something to png") version 0.05
+    s2png ("stuff to png") version 0.05
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     
@@ -33,7 +33,7 @@ Usage
       -p password   encrypt/decrypt the output with password using RC4
                     (Warning: do not use this if you want actual secrecy!)
     Normally s2png detects which operation to perform by file type. You can
-    circumvent this behavior with the following switches:
+    override this behavior with the following switches:
       -e            force encoding mode
       -d            force decoding mode
 

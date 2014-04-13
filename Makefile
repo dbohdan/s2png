@@ -1,5 +1,5 @@
-CFLAGS=-g -O2 -Wall -I/usr/local/include/
-LDFLAGS=-L/usr/local/lib/
+CFLAGS=-g -O2 -Wall
+LDFLAGS=
 INCS = `libpng-config --cflags`
 LIBS = `libpng-config --libs` -lgd
 
