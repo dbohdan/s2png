@@ -11,14 +11,14 @@ Building and installing
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
 `sudo apt-get install libgd2-xpm-dev libgd2-xpm libpng-dev`. On FreeBSD you will need to install `graphics/gd` and `graphics/png`.
 
-2. Type `make` in your terminal and hit the enter key. Building has been tested on Linux Mint 13, Ubuntu 12.10 and FreeBSD 9.1-RELEASE.
+2. Type `make` in your terminal and hit the enter key. Building has been tested on Linux Mint 13, Ubuntu 12.10, Fedora 20 and FreeBSD 9.1-RELEASE.
 
 3. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`.
 
 Usage
 -----
 
-    s2png ("stuff to png") version 0.05
+    s2png ("something to png") version 0.05
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     

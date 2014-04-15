@@ -1,7 +1,7 @@
 CFLAGS=-g -O2 -Wall
 LDFLAGS=
 INCS = `libpng-config --cflags`
-LIBS = `libpng-config --libs` -lgd
+LIBS = `libpng-config --libs` -lgd -lm
 
 all: test readme
 
