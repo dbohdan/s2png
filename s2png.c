@@ -1,6 +1,7 @@
 /*
- *   s2png - "something to png" copyright (c) 2006 k0wax
- *   Changes copyright (c) 2013, 2014 dbohdan
+ *   s2png - "stuff to png"
+ *   Copyright (c) 2006 k0wax
+ *   Copyright (c) 2013, 2014 dbohdan
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by

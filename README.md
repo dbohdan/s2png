@@ -1,6 +1,8 @@
 s2png — “stuff to PNG”
 ==========================
 
+[![Build Status](https://travis-ci.org/dbohdan/s2png.svg)](https://travis-ci.org/dbohdan/s2png)
+
 This program stores arbitrary binary data inside PNG images and extracts it back. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. The present version was created to fix a libgd-related problem that caused s2png 0.01 to segfault when compiled on modern GNU/Linux distributions. It has other improvements but remains compatible with the original.
 
 s2png is licensed under the GNU GPL 2.0. See the file LICENSE.
@@ -18,7 +20,7 @@ Building and installing
 Usage
 -----
 
-    s2png ("something to png") version 0.05
+    s2png ("stuff to png") version 0.05
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     
