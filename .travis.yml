@@ -1,6 +1,9 @@
 language: c
-before_install:
-- sudo apt-get update -qq
-install:
-- sudo apt-get install libgd2-xpm-dev libgd2-xpm libpng-dev
+sudo: false
+addons:
+  apt:
+    packages:
+      - libgd2-xpm-dev
+      - libgd2-xpm
+      - libpng-dev
 script: make
