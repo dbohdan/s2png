@@ -11,11 +11,18 @@ Building and installing
 -----------------------
 
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
-`sudo apt-get install libgd2-xpm-dev libgd2-xpm libpng-dev`. On FreeBSD you will need to install `graphics/gd` and `graphics/png`.
+`sudo apt-get install libgd2-xpm-dev libgd2-xpm`. On FreeBSD you will need to install `graphics/gd`.
 
-2. Type `make` in your terminal and hit the enter key. Building has been tested on Linux Mint 13, Ubuntu 12.10, Fedora 20 and FreeBSD 9.1-RELEASE.
+2. Type `make` in your terminal and hit the enter key. Building has been tested on the following operating systems:
 
-3. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`.
+* Linux Mint 13
+* Ubuntu 12.04
+* Ubuntu 14.04
+* Fedora 20 though 23
+* FreeBSD 9.1-RELEASE
+* FreeBSD 10.1-RELEASE
+
+3. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`. (In the former case you can uninstall s2png with `sudo make uninstall`.)
 
 Usage
 -----
@@ -42,15 +49,15 @@ Usage
 Examples
 --------
 
-To store 1.mp3 in an image enter the following on the command line:
+To store foo.mp3 in an image enter the following on the command line:
 
-    s2png 1.mp3
+    s2png foo.mp3
 
-A file named 1.mp3.png will be created in the same directory as 1.mp3.
+A file named foo.mp3.png will be created in the same directory as foo.mp3.
 
 Add the `-s` switch to ensure the resulting image is, give or take a pixel, square and `-b "some text"` to change the text of the banner at the bottom.
 
-    s2png -s -b hello 1.mp3
+    s2png -s -b hello foo.mp3
 
 To decode decode_me.mp3.png and get the original file decode_me.mp3 run the command
 
