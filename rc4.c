@@ -106,35 +106,3 @@ int pass_hash(char* indata, unsigned char *seed)
     return len;
 }
 
-/*
-#define buf_size 1024
-
-int main(int argc, char* argv[])
-{
-    char seed[256];
-    char buf[buf_size];
-    int rd;
-    int n;
-    struct rc4_key key;
-
-    if (argc < 2)
-    {
-        fprintf(stderr, "%s key <in >out\n", argv[0]);
-        return 1;
-    }
-
-    n = pass_hash(argv[1], seed);
-
-    prepare_key(seed, n, &key);
-
-    rd = fread(buf, 1, buf_size, stdin);
-    while (rd > 0)
-    {
-        rc4(buf, rd, &key);
-        fwrite(buf, 1, rd, stdout);
-        rd = fread(buf, 1, buf_size, stdin);
-    }
-
-    return 0;
-}
-*/
