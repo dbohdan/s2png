@@ -20,7 +20,7 @@ Building and installing
 Usage
 -----
 
-    s2png ("stuff to png") version 0.05
+    s2png ("stuff to png") version 0.6.0
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     

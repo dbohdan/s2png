@@ -1,13 +1,13 @@
 /*
  *   s2png - "stuff to png"
  *   Copyright (c) 2006 k0wax
- *   Copyright (c) 2013, 2014 dbohdan
+ *   Copyright (c) 2013, 2014, 2015 dbohdan
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation; either version 2 of the License, or
  *   (at your option) any later version.
-*/
+ */
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -16,6 +16,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <math.h>
 #include <sysexits.h>
 
@@ -23,7 +24,7 @@
 #include "gdfontt.h"
 #include "rc4.h"
 
-#define VERSION_STR ("0.05")
+#define VERSION_STR ("0.6.0")
 #define BANNER_HEIGHT 8
 #define MODE_NONE 0
 #define MODE_ENCODE 1
