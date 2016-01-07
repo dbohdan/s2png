@@ -5,5 +5,4 @@ addons:
     packages:
       - libgd2-xpm-dev
       - libgd2-xpm
-      - libpng-dev
 script: make
