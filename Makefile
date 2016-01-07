@@ -14,20 +14,20 @@ INSTALL_DATA    = $(INSTALL) -m 644
 DESTDIR =
 
 CFLAGS  = -g -O2 -Wall
-LDFLAGS =
+LDFLAGS = -L"`gdlib-config --libdir`"
 INCS    = `gdlib-config --cflags`
-LIBS    = `gdlib-config --libs`
+LIBS    = -lgd -lm
 
 all: test README.md
 
 s2png: s2png.o rc4.o
-	$(CC) $(LDFLAGS) $(LIBS) s2png.o rc4.o -o $@
+	$(CC) $(LDFLAGS) s2png.o rc4.o -o $@ $(LIBS)
 
 s2png.o: s2png.c
-	$(CC) -c $(CFLAGS) $(INCS) $< -o $@
+	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
 
 rc4.o: rc4.c
-	$(CC) -c $(CFLAGS) $(INCS) $< -o $@
+	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
 
 install: installdirs
 	$(INSTALL_PROGRAM) s2png $(DESTDIR)$(bindir)/s2png
