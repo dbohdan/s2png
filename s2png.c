@@ -8,7 +8,7 @@
  *   the Free Software Foundation; either version 2 of the License, or
  *   (at your option) any later version.
  */
-#define _POSIX_C_SOURCE 1
+#define _POSIX_C_SOURCE 200112L
 
 #include <getopt.h>
 #include <math.h>
