@@ -13,7 +13,7 @@ INSTALL_DATA    = $(INSTALL) -m 644
 
 DESTDIR =
 
-CFLAGS  = -g -O2 -Wall
+CFLAGS  = -g -O2 -Wall -Wextra -pedantic -std=c99 -Wstrict-aliasing -Wstrict-overflow
 LDFLAGS = -L"`gdlib-config --libdir`"
 INCS    = `gdlib-config --cflags`
 LIBS    = -lgd -lm
