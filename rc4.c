@@ -1,28 +1,29 @@
 /*
+ *
+ * This code is based on the implementation of RC4 created by John Allen.
+ * The original is available from http://www.cypherspace.org/adam/rsa/rc4c.html.
+ *
+ * It is believed to be in the Public Domain.
+ *
+ */
 
-This code is based on the implementation of RC4 created by John Allen.
-The original is available from http://www.cypherspace.org/adam/rsa/rc4c.html.
-
-It is believed to be in the Public Domain.
-
-*/
-
+#include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "rc4.h"
 
 #define swap_byte(x,y) t = *(x); *(x) = *(y); *(y) = t
 
-void prepare_key(unsigned char *key_data_ptr, int key_data_len,
+void prepare_key(uint8_t *key_data_ptr, size_t key_data_len,
                  struct rc4_key *key)
 {
-    unsigned char t;
-    unsigned char index1;
-    unsigned char index2;
-    unsigned char* state;
-    short counter;
+    uint8_t t;
+    uint8_t index1;
+    uint8_t index2;
+    uint8_t* state;
+    uint16_t counter;
 
     state = &key->state[0];
     for(counter = 0; counter < 256; counter++)
@@ -39,24 +40,24 @@ void prepare_key(unsigned char *key_data_ptr, int key_data_len,
     }
 }
 
-void drop_n(int n, struct rc4_key *key)
+void drop_n(size_t n, struct rc4_key *key)
 {
         if (n > 0)
         {
-                unsigned char* temp = calloc(n, sizeof(unsigned char));
+                uint8_t* temp = calloc(n, sizeof(uint8_t));
                 rc4(temp, n, key);
                 free(temp);
         }
 }
 
-void rc4(unsigned char *buffer_ptr, int buffer_len, struct rc4_key *key)
+void rc4(uint8_t *buffer_ptr, size_t buffer_len, struct rc4_key *key)
 {
-    unsigned char t;
-    unsigned char x;
-    unsigned char y;
-    unsigned char* state;
-    unsigned char xorIndex;
-    short counter;
+    uint8_t t;
+    uint8_t x;
+    uint8_t y;
+    uint8_t* state;
+    uint8_t xorIndex;
+    size_t counter;
 
     x = key->x;
     y = key->y;
@@ -73,13 +74,13 @@ void rc4(unsigned char *buffer_ptr, int buffer_len, struct rc4_key *key)
     key->y = y;
 }
 
-int pass_hash(char* indata, unsigned char *seed)
+size_t pass_hash(char* indata, uint8_t *seed)
 {
     char data[512];
     char digit[5];
-    int hex;
-    int i;
-    int len;
+    uint32_t hex;
+    size_t i;
+    size_t len;
 
     strcpy(data, indata);
     len = strlen(data);
