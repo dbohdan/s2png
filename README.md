@@ -36,7 +36,7 @@ Usage
     
       -h            display this message and quit
       -o filename   output the converted data (image or binary) to filename
-      -w width      set the width of PNG image output (600 by default)
+      -w width      set the width of the PNG image output (600 by default)
       -s            make the output image roughly square
       -b text       custom banner text ("" for no banner)
       -p password   encrypt/decrypt the output with password using RC4

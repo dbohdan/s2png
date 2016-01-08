@@ -37,6 +37,7 @@
 #define MAX_FILE_SIZE 0xFFFFFF
 #define MAX_IMAGE_WIDTH 0xFFFF
 
+#define DEFAULT_WIDTH 600
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
@@ -229,8 +230,8 @@ bool is_png_file(char *filename)
 void usage()
 {
     printf("s2png (\"stuff to png\") version %s\n", VERSION_STR);
-    printf("usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]\n\
-             [-p password] [-e | -d] file\n");
+    printf("usage: s2png [-h] [-o filename] [-w width (%u) | -s] [-b text]\n\
+             [-p password] [-e | -d] file\n", DEFAULT_WIDTH);
 }
 
 void help()
@@ -243,7 +244,7 @@ This version can encode files of up to %u bytes.\n\
 \n\
   -h            display this message and quit\n\
   -o filename   output the converted data (image or binary) to filename\n\
-  -w width      set the width of PNG image output (600 by default)\n\
+  -w width      set the width of the PNG image output (%u by default)\n\
   -s            make the output image roughly square\n\
   -b text       custom banner text (\"\" for no banner)\n\
   -p password   encrypt/decrypt the output with password using RC4\n\
@@ -253,7 +254,7 @@ override this behavior with the following switches:\n\
   -e            force encoding mode\n\
   -d            force decoding mode\n\
 \n\
-See README.md for further details.\n", MAX_FILE_SIZE);
+See README.md for further details.\n", MAX_FILE_SIZE, DEFAULT_WIDTH);
 }
 
 int main(int argc, char **argv)
@@ -267,7 +268,7 @@ int main(int argc, char **argv)
     char *out_fn = NULL;
     char *banner_text = DEFAULT_BANNER;
     char *password = NULL;
-    uint32_t image_width = 600;
+    uint32_t image_width = DEFAULT_WIDTH;
     bool make_square = false;
     uint8_t mode = MODE_NONE;
 
