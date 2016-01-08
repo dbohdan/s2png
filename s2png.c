@@ -35,6 +35,7 @@
 
 #define RC4_DROP_N 3072
 #define MAX_FILE_SIZE 0xFFFFFF
+#define MAX_IMAGE_WIDTH 0xFFFF
 
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
@@ -60,7 +61,7 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
 
     /* Has libgd been able to read and interpret fin? */
     if (im == NULL) {
-        fprintf(stderr, "error: file `%s' not readable as PNG\n", fin_fn);
+        fprintf(stderr, "error: file `%s' is not readable as PNG\n", fin_fn);
         return EX_DATAERR;
     }
 
@@ -71,8 +72,7 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
 
     fout = fopen(fout_fn, "wb");
     if (fout == NULL) {
-        fprintf(stderr, "error: cannot open file `%s' for output\n",
-                fout_fn);
+        fprintf(stderr, "error: can't open file `%s' for output\n", fout_fn);
         return EX_CANTCREAT;
     }
 
@@ -194,7 +194,7 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
     /* Save the created image in a PNG file. */
     fout = fopen(fout_fn, "wb");
     if (fout == NULL) {
-        fprintf(stderr, "error: cannot open file `%s' for output\n",
+        fprintf(stderr, "error: can't open file `%s' for output\n",
                 fout_fn);
         return EX_CANTCREAT;
     }
@@ -308,13 +308,14 @@ int main(int argc, char **argv)
     struct stat stat_buf;
     /* Does the input file exist? */
     if (stat(in_fn, &stat_buf) != 0) {
-        fprintf(stderr, "error: input path `%s' doesn't exist\n", in_fn);
+        fprintf(stderr, "error: can't access input file `%s'\n", in_fn);
         return EX_NOINPUT;
     }
 
     /* Is the input path a file or a directory? */
     if (S_ISDIR(stat_buf.st_mode)) {
-        fprintf(stderr, "error: input path `%s' is a directory\n", in_fn);
+        fprintf(stderr, "error: input path `%s' is a directory, not a file\n",
+                in_fn);
         return EX_DATAERR;
     }
 
@@ -333,7 +334,7 @@ int main(int argc, char **argv)
             } else {
                 strcpy(out_fn, in_fn);
                 strcat(out_fn, ".orig");
-                fprintf(stderr, "warn: file `%s' will be saved as `%s'\n",
+                fprintf(stderr, "warning: file `%s' will be saved as `%s'\n",
                         in_fn, out_fn);
             }
         } else if (mode == MODE_ENCODE) {
@@ -342,15 +343,11 @@ int main(int argc, char **argv)
         }
     }
 
-    /* Check for invalid image width. This code has provisions for reporting
-       other misc. errors. */
-    char *err = calloc(1, sizeof(char) * 255);
-    if (!image_width && mode == MODE_ENCODE) {
-        strcpy(err, "image width not set or invalid");
-    }
-
-    if (strlen(err) > 0) {
-        fprintf(stderr, "%s, see -h option for help\n", err);
+    /* Check for invalid image width. */
+    if ((mode == MODE_ENCODE) &&
+        ((image_width == 0) || (image_width > MAX_IMAGE_WIDTH))) {
+        fprintf(stderr, "error: invalid image width; "
+                "must be between 1 and %u\n", MAX_IMAGE_WIDTH);
         return EX_USAGE;
     }
 
