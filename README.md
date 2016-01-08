@@ -11,7 +11,7 @@ Building and installing
 -----------------------
 
 1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
-`sudo apt-get install libgd2-xpm-dev libgd2-xpm`. On FreeBSD you will need to install `graphics/gd`.
+`sudo apt-get install libgd2-noxpm libgd2-noxpm-dev`. On FreeBSD you will need to install `graphics/gd`.
 
 2. Type `make` in your terminal and hit the enter key. Building has been tested on the following operating systems:
 
@@ -27,7 +27,7 @@ Building and installing
 Usage
 -----
 
-    s2png ("stuff to png") version 0.6.0
+    s2png ("stuff to png") version 0.7.0
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     
