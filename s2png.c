@@ -107,7 +107,7 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
     fclose(fout);
 
     gdImageDestroy(im);
-    return 1;
+    return EX_OK;
 }
 
 int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
@@ -203,9 +203,7 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
 
     gdImageDestroy(im);
 
-    struct stat fout_stat;
-    stat(fout_fn, &fout_stat);
-    return (int) fout_stat.st_size;
+    return EX_OK;
 }
 
 bool is_png_file(char *filename)
@@ -351,10 +349,10 @@ int main(int argc, char **argv)
 
     /* Perform the chosen operation. */
     if (mode == MODE_ENCODE) {
-        file_to_png(in_fn, out_fn, image_width, make_square, banner_text,
+        return file_to_png(in_fn, out_fn, image_width, make_square, banner_text,
                            password);
     } else if (mode == MODE_DECODE) {
-        png_to_file(in_fn, out_fn, password);
+        return png_to_file(in_fn, out_fn, password);
     } else {
         fprintf(stderr, "internal error: unknown mode\n");
         return EX_SOFTWARE;
