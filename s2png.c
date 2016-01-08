@@ -305,10 +305,17 @@ int main(int argc, char **argv)
 
     in_fn = argv[argc - 1];
 
+    struct stat stat_buf;
     /* Does the input file exist? */
-    if (access(in_fn, R_OK) != 0) {
-        fprintf(stderr, "error: can't open file `%s'\n", in_fn);
+    if (stat(in_fn, &stat_buf) != 0) {
+        fprintf(stderr, "error: input path `%s' doesn't exist\n", in_fn);
         return EX_NOINPUT;
+    }
+
+    /* Is the input path a file or a directory? */
+    if (S_ISDIR(stat_buf.st_mode)) {
+        fprintf(stderr, "error: input path `%s' is a directory\n", in_fn);
+        return EX_DATAERR;
     }
 
     /* If we weren't explicitly told what operation to perform through
