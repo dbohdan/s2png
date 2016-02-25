@@ -15,12 +15,12 @@ Building and installing
 
 2. Type `make` in your terminal and hit the enter key. Building has been tested on the following operating systems:
 
-* Linux Mint 13
-* Ubuntu 12.04
-* Ubuntu 14.04
-* Fedora 20 though 23
-* FreeBSD 9.1-RELEASE
-* FreeBSD 10.1-RELEASE
+    * Linux Mint 13
+    * Ubuntu 12.04
+    * Ubuntu 14.04
+    * Fedora 20 though 23
+    * FreeBSD 9.1-RELEASE
+    * FreeBSD 10.1-RELEASE
 
 3. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`. (In the former case you can uninstall s2png with `sudo make uninstall`.)
 
