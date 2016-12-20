@@ -18,7 +18,7 @@ LDFLAGS = -L"`gdlib-config --libdir`"
 INCS    = `gdlib-config --cflags`
 LIBS    = -lgd -lm
 
-all: test README.md
+all: appveyor.yml test README.md
 
 s2png: s2png.o rc4.o
 	$(CC) $(LDFLAGS) s2png.o rc4.o -o $@ $(LIBS)
@@ -41,7 +41,10 @@ uninstall:
 clean:
 	rm -f *.o s2png
 
-# The script uses the output of `s2png -h`, so README.md must have it as
+appveyor.yml: appveyor.yml.in s2png
+	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < appveyor.yml.in > appveyor.yml
+
+# The script uses the output of `s2png -h`, so README.md must have s2png as
 # a prerequisite.
 README.md: README.in s2png
 	./scripts/gen-readme.sh
