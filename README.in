@@ -72,6 +72,8 @@ cp /mingw32/bin/{libbz2-1.dll,libexpat-1.dll,libfontconfig-1.dll,libfreetype-6.d
 
 The contents of `build/` will run on Windows machines without MSYS2.
 
+A Windows executable built from the latest commit can be downloaded from [AppVeyor](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts).
+
 Usage
 -----
 
