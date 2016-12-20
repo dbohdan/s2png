@@ -3,7 +3,7 @@ install:
   - cmd: set MSYSTEM=MINGW32
   - cmd: C:\msys64\usr\bin\bash -lc "pacman --sync --noconfirm diffutils git make mingw-w64-i686-gd mingw-w64-i686-imagemagick wget"
   - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/; wget https://raw.githubusercontent.com/freebsd/freebsd/master/include/sysexits.h"
-  - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/; sed -i 's/<sysexits.h>/^"sysexits.h^"/' s2png.c"
+  - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/; sed -i 's/<sysexits.h>/\"sysexits.h\"/' s2png.c"
 build_script:
   - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/; make s2png"
 test_script:
