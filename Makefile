@@ -42,12 +42,12 @@ clean:
 	-rm -f *.o s2png s2png.exe
 
 appveyor.yml: appveyor.in s2png
-	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < appveyor.in > appveyor.yml
+	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < $< > $@
 
 # The script uses the output of `s2png -h`, so README.md must have s2png as
 # a prerequisite.
 README.md: README.in s2png
-	./scripts/gen-readme.sh < README.in > README.md
+	./scripts/gen-readme.sh < $< > $@
 
 test: s2png
 	./scripts/test.sh
