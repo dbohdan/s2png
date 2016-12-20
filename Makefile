@@ -39,7 +39,7 @@ uninstall:
 	rm -f $(DESTDIR)$(bindir)/s2png
 
 clean:
-	rm -f *.o s2png
+	-rm -f *.o s2png s2png.exe
 
 appveyor.yml: appveyor.in s2png
 	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < appveyor.in > appveyor.yml
