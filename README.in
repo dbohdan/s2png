@@ -2,6 +2,7 @@ s2png — “stuff to PNG”
 ======================
 
 [![Build Status](https://travis-ci.org/dbohdan/s2png.svg)](https://travis-ci.org/dbohdan/s2png)
+[![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/dbohdan/s2png?branch=master&svg=true)](https://ci.appveyor.com/project/dbohdan/s2png)
 
 This program stores arbitrary binary data inside PNG images and extracts it back. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. The present version was created to fix a libgd-related problem that caused s2png 0.01 to segfault when compiled on modern GNU/Linux distributions. It has other improvements but remains compatible with the original.
 
