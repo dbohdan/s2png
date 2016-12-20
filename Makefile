@@ -41,8 +41,8 @@ uninstall:
 clean:
 	rm -f *.o s2png
 
-appveyor.yml: appveyor.yml.in s2png
-	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < appveyor.yml.in > appveyor.yml
+appveyor.yml: appveyor.in s2png
+	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < appveyor.in > appveyor.yml
 
 # The script uses the output of `s2png -h`, so README.md must have s2png as
 # a prerequisite.
