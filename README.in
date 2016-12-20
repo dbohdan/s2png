@@ -1,5 +1,5 @@
 s2png — “stuff to PNG”
-==========================
+======================
 
 [![Build Status](https://travis-ci.org/dbohdan/s2png.svg)](https://travis-ci.org/dbohdan/s2png)
 
@@ -10,19 +10,66 @@ s2png is licensed under the GNU GPL 2.0. See the file LICENSE.
 Building and installing
 -----------------------
 
-1. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
-`sudo apt-get install libgd2-noxpm libgd2-noxpm-dev`. On FreeBSD you will need to install `graphics/gd`.
+### *nix
 
-2. Type `make` in your terminal and hit the enter key. Building has been tested on the following operating systems:
+1\. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
+`sudo apt-get install libgd2-noxpm libgd2-noxpm-dev`. On FreeBSD install `graphics/gd`.
 
-    * Linux Mint 13
-    * Ubuntu 12.04
-    * Ubuntu 14.04
+2\. Clone the repository and `cd` into it.
+
+```sh
+git clone https://github.com/dbohdan/s2png
+cd s2png/
+```
+
+3\. Run `make`. Building has been tested on the following operating systems:
+
     * Fedora 20 though 23
     * FreeBSD 9.1-RELEASE
     * FreeBSD 10.1-RELEASE
+    * Linux Mint 13
+    * OpenSUSE Tumbleweed (2016*)
+    * Ubuntu 12.04
+    * Ubuntu 14.04
+    * Ubuntu 16.04
 
-3. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`. (In the former case you can uninstall s2png with `sudo make uninstall`.)
+4\. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`. (In the former case you can uninstall s2png with `sudo make uninstall`.)
+
+### Windows
+
+You will need [MSYS2](http://msys2.github.io/). Install it and start the MSYS2 MINGW32 Shell.
+
+1\. Install the build dependencies.
+
+```sh
+pacman -Syuu diffutils git make mingw-w64-i686-gcc mingw-w64-i686-gd mingw-w64-i686-imagemagick wget
+```
+
+2\. Clone the repository and `cd` into it.
+
+```sh
+git clone https://github.com/dbohdan/s2png
+cd s2png/
+```
+
+3\. Get `sysexits.h`, which is required to build s2png, and modifty `s2png.c` to use it.
+
+```sh
+wget https://raw.githubusercontent.com/freebsd/freebsd/master/include/sysexits.h
+sed -i 's/<sysexits.h>/"sysexits.h"/' s2png.c
+```
+
+4\. Build `s2png.exe` executable with `make`.
+
+5\. Create a new directory. Copy the binary and its DLL dependencies there.
+
+```sh
+mkdir build/
+cp s2png.exe build/
+cp /mingw32/bin/{libbz2-1.dll,libexpat-1.dll,libfontconfig-1.dll,libfreetype-6.dll,libgcc_s_dw2-1.dll,libgd-3.dll,libglib-2.0-0.dll,libgraphite2.dll,libharfbuzz-0.dll,libiconv-2.dll,libintl-8.dll,libjpeg-8.dll,liblzma-5.dll,libpcre-1.dll,libpng16-16.dll,libstdc++-6.dll,libtiff-5.dll,libvpx-1.dll,libwinpthread-1.dll,libXpm-noX4.dll,zlib1.dll} build/
+```
+
+The contents of `build/` will run on Windows machines without MSYS2.
 
 Usage
 -----
