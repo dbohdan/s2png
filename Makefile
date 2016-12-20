@@ -47,7 +47,7 @@ appveyor.yml: appveyor.in s2png
 # The script uses the output of `s2png -h`, so README.md must have s2png as
 # a prerequisite.
 README.md: README.in s2png
-	./scripts/gen-readme.sh
+	./scripts/gen-readme.sh < README.in > README.md
 
 test: s2png
 	./scripts/test.sh
