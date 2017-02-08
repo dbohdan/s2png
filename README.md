@@ -38,7 +38,9 @@ cd s2png/
 
 ### Windows
 
-You will need [MSYS2](http://msys2.github.io/). Install it and start the MSYS2 MINGW32 Shell.
+You can download a Windows executable built from the latest commit from [AppVeyor](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts).
+
+To build s2png you will need [MSYS2](http://msys2.github.io/). Install it and start the MSYS2 MINGW32 Shell.
 
 1\. Install the build dependencies.
 
@@ -71,8 +73,6 @@ cp /mingw32/bin/{libbz2-1.dll,libexpat-1.dll,libfontconfig-1.dll,libfreetype-6.d
 ```
 
 The contents of `build/` will run on Windows machines without MSYS2.
-
-A Windows executable built from the latest commit can be downloaded from [AppVeyor](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts).
 
 Usage
 -----
