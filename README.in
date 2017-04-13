@@ -25,16 +25,16 @@ cd s2png/
 
 3\. Run `make`. Building has been tested on the following operating systems:
 
-    * Fedora 20 though 23
-    * FreeBSD 9.1-RELEASE
-    * FreeBSD 10.1-RELEASE
-    * Linux Mint 13
-    * OpenSUSE Tumbleweed (2016*)
-    * Ubuntu 12.04
-    * Ubuntu 14.04
-    * Ubuntu 16.04
+* Fedora 20 though 23
+* FreeBSD 9.1-RELEASE
+* FreeBSD 10.1-RELEASE
+* Linux Mint 13
+* OpenSUSE Tumbleweed (2016*)
+* Ubuntu 12.04
+* Ubuntu 14.04
+* Ubuntu 16.04
 
-4\. Install with `sudo make install` or use Checkinstall to produce an uninstallable package with `sudo checkinstall`. (In the former case you can uninstall s2png with `sudo make uninstall`.)
+4\. Install with `sudo make install`. You will be able to uninstall s2png with `sudo make uninstall`. If [CheckInstall](http://checkinstall.izto.org/) supports your OS, you should also be able to create and install an uninstallable package for s2png with `sudo checkinstall`.
 
 ### Windows
 
