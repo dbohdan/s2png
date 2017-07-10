@@ -27,7 +27,7 @@
 #include "gdfontt.h"
 #include "rc4.h"
 
-#define VERSION_STR ("0.7.1")
+#define VERSION_STR ("0.7.2")
 #define BANNER_HEIGHT 8
 #define MODE_NONE 0
 #define MODE_ENCODE 1
