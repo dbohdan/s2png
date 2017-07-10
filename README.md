@@ -83,13 +83,13 @@ Usage
     This version can encode files of up to 16777215 bytes.
     
       -h            display this message and quit
-      -o filename   output the converted data (image or binary) to filename
+      -o filename   output the encoded or decoded data to filename
       -w width      set the width of the PNG image output (600 by default)
       -s            make the output image roughly square
       -b text       custom banner text ("" for no banner)
       -p password   encrypt/decrypt the output with password using RC4
                     (Warning: do not use this if you want actual secrecy!)
-    Normally s2png detects which operation to perform by file type. You can
+    Normally s2png detects which operation to perform by the file type. You can
     override this behavior with the following switches:
       -e            force encoding mode
       -d            force decoding mode

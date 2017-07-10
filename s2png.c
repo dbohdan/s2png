@@ -243,13 +243,13 @@ Store any data in a PNG image.\n\
 This version can encode files of up to %u bytes.\n\
 \n\
   -h            display this message and quit\n\
-  -o filename   output the converted data (image or binary) to filename\n\
+  -o filename   output the encoded or decoded data to filename\n\
   -w width      set the width of the PNG image output (%u by default)\n\
   -s            make the output image roughly square\n\
   -b text       custom banner text (\"\" for no banner)\n\
   -p password   encrypt/decrypt the output with password using RC4\n\
                 (Warning: do not use this if you want actual secrecy!)\n\
-Normally s2png detects which operation to perform by file type. You can\n\
+Normally s2png detects which operation to perform by the file type. You can\n\
 override this behavior with the following switches:\n\
   -e            force encoding mode\n\
   -d            force decoding mode\n\
