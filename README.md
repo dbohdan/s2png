@@ -4,7 +4,7 @@ s2png — “stuff to PNG”
 [![Build Status](https://travis-ci.org/dbohdan/s2png.svg)](https://travis-ci.org/dbohdan/s2png)
 [![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/dbohdan/s2png?branch=master&svg=true)](https://ci.appveyor.com/project/dbohdan/s2png)
 
-This program stores arbitrary binary data inside PNG images and extracts it back. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. The present version was created to fix a libgd-related problem that caused s2png 0.01 to segfault when compiled on modern GNU/Linux distributions. It has other improvements but remains compatible with the original.
+This program transforms arbitrary binary data into PNG images of colorful noise and vice versa. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. This fork fixes a libgd-related problem that caused s2png 0.01 to segfault when compiled on a modern operating system and includes various improvements. It remains data-compatible with the original.
 
 s2png is licensed under the GNU GPL 2.0. See the file LICENSE.
 
@@ -13,8 +13,8 @@ Building and installing
 
 ### *nix
 
-1\. Install the dependencies. On Debian, Ubuntu and Linux Mint you can do so with
-`sudo apt-get install libgd2-noxpm libgd2-noxpm-dev`. On FreeBSD install `graphics/gd`.
+1\. Install the build dependencies. On Debian and Ubuntu run
+`sudo apt install build-essential git libgd2-noxpm-dev pkg-config`. On FreeBSD run `sudo pkg install git gmake libgd pkgconf`.
 
 2\. Clone the repository and `cd` into it.
 
@@ -23,15 +23,13 @@ git clone https://github.com/dbohdan/s2png
 cd s2png/
 ```
 
-3\. Run `make`. Building has been tested on the following operating systems:
+3\. Build s2png and run the tests for it with `make test` or `gmake test`. s2png is known to build correctly and pass the tests on the following operating systems:
 
-* Fedora 20 though 23
-* FreeBSD 9.1-RELEASE
-* FreeBSD 10.1-RELEASE
-* Linux Mint 13
-* OpenSUSE Tumbleweed (2016*)
+* Debian 9
+* FreeBSD 11.0-RELEASE
+* OpenSUSE Tumbleweed (2017*)
+* Raspbian 8
 * Ubuntu 12.04
-* Ubuntu 14.04
 * Ubuntu 16.04
 
 4\. Install with `sudo make install`. You will be able to uninstall s2png with `sudo make uninstall`. If [CheckInstall](http://checkinstall.izto.org/) supports your OS, you should also be able to create and install an uninstallable package for s2png with `sudo checkinstall`.
@@ -40,7 +38,7 @@ cd s2png/
 
 You can download a Windows executable built from the latest commit from [AppVeyor](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts).
 
-To build s2png you will need [MSYS2](http://msys2.github.io/). Install it and start the MSYS2 MINGW32 Shell.
+To build s2png yourself you will need [MSYS2](http://msys2.github.io/). Install it and start the MSYS2 MINGW32 Shell.
 
 1\. Install the build dependencies.
 
@@ -55,7 +53,7 @@ git clone https://github.com/dbohdan/s2png
 cd s2png/
 ```
 
-3\. Get `sysexits.h`, which is required to build s2png, and modifty `s2png.c` to use it.
+3\. Get `sysexits.h`, which is required to build s2png, and modify `s2png.c` to use it.
 
 ```sh
 wget https://raw.githubusercontent.com/freebsd/freebsd/master/include/sysexits.h
@@ -64,7 +62,7 @@ sed -i 's/<sysexits.h>/"sysexits.h"/' s2png.c
 
 4\. Build `s2png.exe` executable with `make`.
 
-5\. Create a new directory. Copy the binary and its DLL dependencies there.
+5\. Create a new directory. Copy the binary and the DLLs it depends on there.
 
 ```sh
 mkdir build/
@@ -99,20 +97,20 @@ Usage
 Examples
 --------
 
-To store foo.mp3 in an image enter the following on the command line:
+To store foo.mp3 in an image enter the following command:
 
     s2png foo.mp3
 
 A file named foo.mp3.png will be created in the same directory as foo.mp3.
 
-Add the `-s` switch to ensure the resulting image is, give or take a pixel, square and `-b "some text"` to change the text of the banner at the bottom.
+Add the `-s` switch to ensure the resulting image is square (give or take a pixel) and `-b "some text"` to change the text of the banner at the bottom.
 
     s2png -s -b hello foo.mp3
 
-To decode decode_me.mp3.png and get the original file decode_me.mp3 run the command
+To decode decode_me.mp3.png and retrieve the original file decode_me.mp3 run the command
 
     s2png decode_me.mp3.png
 
-If you got decode_me_v2.mp3.png as random_letters.png you could decode it directly to decode_me_v2.mp3 with
+You can decode xyz.png to decoded.mp3 with
 
-    s2png -o decode_me_v2.mp3 random_letters.png
+    s2png -o decoded.mp3 xyz.png
