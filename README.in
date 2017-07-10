@@ -4,7 +4,7 @@ s2png — “stuff to PNG”
 [![Build Status](https://travis-ci.org/dbohdan/s2png.svg)](https://travis-ci.org/dbohdan/s2png)
 [![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/dbohdan/s2png?branch=master&svg=true)](https://ci.appveyor.com/project/dbohdan/s2png)
 
-This program transforms arbitrary binary data into PNG images of colorful noise and vice versa. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. This fork fixes a libgd-related problem that caused s2png 0.01 to segfault when compiled on a modern operating system and includes various improvements. It remains data-compatible with the original.
+This program encodes arbitrary binary data in PNG images that look like noise and decodes it back. It was originally developed by k0wax at <http://sourceforge.net/projects/s2png/>. This fork fixes a libgd-related problem that caused s2png 0.01 to segfault when compiled on a modern operating system and includes various improvements. It remains data-compatible with the original.
 
 s2png is licensed under the GNU GPL 2.0. See the file LICENSE.
 
