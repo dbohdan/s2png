@@ -26,8 +26,7 @@ sizetest() {
     dd "bs=$n" count=1 if=/dev/urandom of="$testfile" 2> /dev/null
     ./s2png -e -o "$encoded" -b "" -w 10 "$testfile"
     ./s2png -d -o "$decoded" "$encoded"
-    diff "$testfile" "$decoded"
-    if [ $? != 0 ]; then
+    if ! diff "$testfile" "$decoded"; then
         echo Corruption at file size "$n".
         identify a.png
     fi
@@ -36,7 +35,7 @@ sizetest() {
 echo Running basic operations tests.
 
 # Test for data corruption with an 0xFFFF pattern.
-echo -n -e \\0377\\0377\\0377\\0377\\0377\\0377\\0377\\0377 > test.bin
+printf '\\0377\\0377\\0377\\0377\\0377\\0377\\0377\\0377' > test.bin
 opstest test.bin
 rm test.bin
 
@@ -54,7 +53,7 @@ t3="$(mktemp -t s2pngXXXXX)"
 i=10
 while [ $i -le 256 ]; do
     sizetest "$i" "$t1" "$t2" "$t3"
-    i="$(expr "$i" + 1)"
+    i="$((i + 1))"
 done
 rm "$t1" "$t2" "$t3"
 
