@@ -82,7 +82,9 @@ size_t pass_hash(char* indata, uint8_t *seed)
     size_t i;
     size_t len;
 
-    strcpy(data, indata);
+    strncpy(data, indata, 512);
+    data[512 - 1] = '\0';
+
     len = strlen(data);
 
     if (len & 1)
