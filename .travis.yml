@@ -3,6 +3,5 @@ sudo: false
 addons:
   apt:
     packages:
-      - libgd2-noxpm
-      - libgd2-noxpm-dev
+      - libgd-dev
 script: make
