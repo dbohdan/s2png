@@ -36,7 +36,7 @@ cd s2png/
 
 ### Windows
 
-You can download a Windows executable built from the latest commit from [AppVeyor](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts).
+You can download a Windows executable built from the latest commit from [Bintray](https://bintray.com/dbohdan/s2png/s2png-win32-bin#files).
 
 To build s2png yourself you will need [MSYS2](http://msys2.github.io/). Install it and start the MSYS2 MINGW32 Shell.
 
