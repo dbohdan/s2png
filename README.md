@@ -14,7 +14,7 @@ Building and installing
 ### *nix
 
 1\. Install the build dependencies. On Debian and Ubuntu run
-`sudo apt install build-essential git libgd2-noxpm-dev pkg-config`. On FreeBSD run `sudo pkg install git gmake libgd pkgconf`.
+`sudo apt install build-essential git libgd-dev pkg-config`. On FreeBSD run `sudo pkg install git gmake libgd pkgconf`.
 
 2\. Clone the repository and `cd` into it.
 
