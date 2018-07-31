@@ -16,3 +16,12 @@ after_build:
   - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/build/; 7z a ../s2png-%APPVEYOR_REPO_COMMIT%-win32.zip s2png.exe *.dll"
 artifacts:
   - path: "*.zip"
+deploy:
+  - provider: BinTray
+    username: dbohdan
+    api_key:
+      secure: ozw96x1eb8jSUjZWB3NtAeExwJJh7ELyI/mQed79YG6wRtXKps3D4Efr34b8RQDJ
+    subject: dbohdan
+    repo: s2png
+    package: s2png-win32-bin
+    publish: true
