@@ -1,9 +1,8 @@
 /*
- *
  * This code is based on the implementation of RC4 created by John Allen.
  * The original is available from http://www.cypherspace.org/adam/rsa/rc4c.html.
- *
- * It is believed to be in the Public Domain.
+ * The original is believed to be in the public domain.
+ * Modifications by dbohdan are released to the public domain.
  *
  */
 
@@ -18,8 +17,11 @@
 
 #define swap_byte(x,y) t = *(x); *(x) = *(y); *(y) = t
 
-void prepare_key(uint8_t *key_data_ptr, size_t key_data_len,
-                 struct rc4_key *key)
+void prepare_key(
+    uint8_t *seed_data_ptr,
+    size_t seed_data_len,
+    struct rc4_key *key_ptr
+)
 {
     uint8_t t;
     uint8_t index1;
@@ -27,56 +29,60 @@ void prepare_key(uint8_t *key_data_ptr, size_t key_data_len,
     uint8_t* state;
     uint16_t counter;
 
-    state = &key->state[0];
+    state = &key_ptr->state[0];
     for(counter = 0; counter < 256; counter++)
     state[counter] = counter;
-    key->x = 0;
-    key->y = 0;
+    key_ptr->x = 0;
+    key_ptr->y = 0;
     index1 = 0;
     index2 = 0;
     for (counter = 0; counter < 256; counter++)
     {
-        index2 = (key_data_ptr[index1] + state[counter] + index2) % 256;
+        index2 = (seed_data_ptr[index1] + state[counter] + index2) % 256;
         swap_byte(&state[counter], &state[index2]);
-        index1 = (index1 + 1) % key_data_len;
+        index1 = (index1 + 1) % seed_data_len;
     }
 }
 
-void drop_n(size_t n, struct rc4_key *key)
+void drop_n(size_t n, struct rc4_key *key_ptr)
 {
     if (n > 0)
     {
         uint8_t* temp = calloc(n, sizeof(uint8_t));
-        rc4(temp, n, key);
+        rc4(temp, n, key_ptr);
         free(temp);
     }
 }
 
-void rc4(uint8_t *buffer_ptr, size_t buffer_len, struct rc4_key *key)
+void rc4(uint8_t *buffer_ptr, size_t buffer_len, struct rc4_key *key_ptr)
 {
     uint8_t t;
     uint8_t x;
     uint8_t y;
     uint8_t* state;
-    uint8_t xorIndex;
+    uint8_t xor_index;
     size_t counter;
 
-    x = key->x;
-    y = key->y;
-    state = &key->state[0];
+    x = key_ptr->x;
+    y = key_ptr->y;
+    state = &key_ptr->state[0];
     for (counter = 0; counter < buffer_len; counter++)
     {
         x = (x + 1) % 256;
         y = (state[x] + y) % 256;
         swap_byte(&state[x], &state[y]);
-        xorIndex = (state[x] + state[y]) % 256;
-        buffer_ptr[counter] ^= state[xorIndex];
+        xor_index = (state[x] + state[y]) % 256;
+        buffer_ptr[counter] ^= state[xor_index];
     }
-    key->x = x;
-    key->y = y;
+    key_ptr->x = x;
+    key_ptr->y = y;
 }
 
-bool pass_hash(char *indata, uint8_t *seed, size_t* outlen)
+bool pass_hash(
+    char *hex_pass_ptr,
+    uint8_t *seed_data_ptr,
+    size_t* seed_data_len_ptr
+)
 {
     char data[512];
     char digit[5];
@@ -84,7 +90,7 @@ bool pass_hash(char *indata, uint8_t *seed, size_t* outlen)
     size_t i;
     size_t len;
 
-    strncpy(data, indata, 512);
+    strncpy(data, hex_pass_ptr, 512);
     data[512 - 1] = '\0';
 
     len = strlen(data);
@@ -111,10 +117,10 @@ bool pass_hash(char *indata, uint8_t *seed, size_t* outlen)
         }
 
         sscanf(digit, "%x", &hex);
-        seed[i] = hex;
+        seed_data_ptr[i] = hex;
     }
 
-    *outlen = len;
+    *seed_data_len_ptr = len;
 
     return true;
 }
