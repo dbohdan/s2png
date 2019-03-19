@@ -43,16 +43,16 @@ To extract it get s2png on GitHub.")
 
 bool init_rc4(char *password, struct rc4_key *key)
 {
-    bool hashed;
     size_t n;
     uint8_t seed[256];
+    bool valid;
 
     if (password == NULL) {
         return true;
     }
 
-    hashed = pass_hash(password, seed, &n);
-    if (!hashed) {
+    valid = pass_hash(password, seed, &n);
+    if (!valid) {
         fprintf(stderr, "error: password is not a hexadecimal string\n");
         return false;
     }
