@@ -13,7 +13,7 @@ after_build:
   - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/; cp s2png.exe build/"
   - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/build/; strip s2png.exe"
   - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/build/; cp /mingw32/bin/{libbz2-1.dll,libexpat-1.dll,libfontconfig-1.dll,libfreetype-6.dll,libgcc_s_dw2-1.dll,libgd-3.dll,libglib-2.0-0.dll,libgraphite2.dll,libharfbuzz-0.dll,libiconv-2.dll,libintl-8.dll,libjpeg-8.dll,liblzma-5.dll,libpcre-1.dll,libpng16-16.dll,libstdc++-6.dll,libtiff-5.dll,libvpx-1.dll,libwebp-7.dll,libwinpthread-1.dll,libXpm-noX4.dll,zlib1.dll} ."
-  - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/build/; 7z a ../s2png-%APPVEYOR_REPO_COMMIT%-win32.zip s2png.exe *.dll"
+  - cmd: C:\msys64\usr\bin\bash -lc "cd /c/projects/s2png/build/; 7z a ../s2png-%APPVEYOR_REPO_BRANCH%-%APPVEYOR_REPO_COMMIT%-win32.zip s2png.exe *.dll"
 artifacts:
   - path: "*.zip"
 deploy:
