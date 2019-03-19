@@ -31,7 +31,7 @@ void drop_n(
     struct rc4_key *key_ptr
 );
 bool pass_scan(
-    char* hex_pass,
+    char* hex_pass_ptr,
     uint8_t *seed_data_ptr,
     size_t* seed_data_len_ptr
 );
