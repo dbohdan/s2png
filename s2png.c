@@ -1,7 +1,7 @@
 /*
  *   s2png - "stuff to png"
  *   Copyright (c) 2006 k0wax
- *   Copyright (c) 2013, 2014, 2015 dbohdan
+ *   Copyright (c) 2013, 2014, 2015, 2016, 2017, 2018, 2019 dbohdan
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include "gdfontt.h"
 #include "rc4.h"
 
-#define VERSION_STR ("0.7.3")
+#define VERSION_STR ("0.8.0")
 #define BANNER_HEIGHT 8
 #define MODE_NONE 0
 #define MODE_ENCODE 1
@@ -41,15 +41,29 @@
 #define DEFAULT_BANNER ("This image contains binary data. \
 To extract it get s2png on GitHub.")
 
-void init_rc4(char *password, struct rc4_key *key)
+bool init_rc4(char *password, struct rc4_key *key)
 {
-    if (password != NULL) {
-        size_t n;
-        uint8_t seed[256];
-        n = pass_hash(password, seed);
-        prepare_key(seed, n, key);
-        drop_n(RC4_DROP_N, key);
+    bool hashed;
+    size_t n;
+    uint8_t seed[256];
+
+    if (password == NULL) {
+        return true;
     }
+
+    hashed = pass_hash(password, seed, &n);
+    if (!hashed) {
+        fprintf(stderr, "error: password is not a hexadecimal string\n");
+        return false;
+    }
+    if (n == 0) {
+        fprintf(stderr, "error: password is empty\n");
+        return false;
+    }
+    prepare_key(seed, n, key);
+    drop_n(RC4_DROP_N, key);
+
+    return true;
 }
 
 int png_to_file(char *fin_fn, char *fout_fn, char *password)
@@ -84,7 +98,9 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
     int32_t y;
 
     struct rc4_key key;
-    init_rc4(password, &key);
+    if (!init_rc4(password, &key)) {
+        return EX_DATAERR;
+    };
 
     /* For each pixel of the image... */
     for (y = 0; y < gdImageSY(im); y++) {
@@ -158,7 +174,9 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
     uint32_t y = 0;
 
     struct rc4_key key;
-    init_rc4(password, &key);
+    if (!init_rc4(password, &key)) {
+        return EX_DATAERR;
+    }
 
     /* Read the input file in sets of three bytes. */
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
@@ -247,7 +265,8 @@ This version can encode files of up to %u bytes.\n\
   -w width      set the width of the PNG image output (%u by default)\n\
   -s            make the output image roughly square\n\
   -b text       custom banner text (\"\" for no banner)\n\
-  -p password   encrypt/decrypt the output with password using RC4\n\
+  -p password   encrypt/decrypt the output with a hexadecimal password\n\
+                using RC4\n\
                 (Warning: do not use this if you want actual secrecy!)\n\
 Normally s2png detects which operation to perform by the file type. You can\n\
 override this behavior with the following switches:\n\

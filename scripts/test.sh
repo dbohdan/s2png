@@ -8,8 +8,10 @@ opstest() {
     ./s2png -s -o "$testfile.png" "$testfile" || echo File encoding failed.
     ./s2png -o "$testfile.out" "$testfile.png" || echo File decoding failed.
 
-    ./s2png -s -o "$testfile.png" -b "Hello" -p password "$testfile" || echo File encryption failed.
-    ./s2png -o "$testfile.out2" -p password "$testfile.png" || echo File decryption failed.
+    # echo password | md5sum | cut -c 1-32
+    password=286755fad04869ca523320acce0dc6a
+    ./s2png -s -o "$testfile.png" -b "Hello" -p "$password" "$testfile" || echo File encryption failed.
+    ./s2png -o "$testfile.out2" -p "$password" "$testfile.png" || echo File decryption failed.
 
     diff "$testfile" "$testfile.out" || echo Basic test failed.
     diff "$testfile" "$testfile.out2" || echo Encryption test failed.

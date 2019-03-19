@@ -75,7 +75,7 @@ The contents of `build/` will run on Windows machines without MSYS2.
 Usage
 -----
 
-    s2png ("stuff to png") version 0.7.3
+    s2png ("stuff to png") version 0.8.0
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     
@@ -87,7 +87,8 @@ Usage
       -w width      set the width of the PNG image output (600 by default)
       -s            make the output image roughly square
       -b text       custom banner text ("" for no banner)
-      -p password   encrypt/decrypt the output with password using RC4
+      -p password   encrypt/decrypt the output with a hexadecimal password
+                    using RC4
                     (Warning: do not use this if you want actual secrecy!)
     Normally s2png detects which operation to perform by the file type. You can
     override this behavior with the following switches:

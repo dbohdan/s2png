@@ -7,6 +7,8 @@
  *
  */
 
+#include <ctype.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,12 +44,12 @@ void prepare_key(uint8_t *key_data_ptr, size_t key_data_len,
 
 void drop_n(size_t n, struct rc4_key *key)
 {
-        if (n > 0)
-        {
-                uint8_t* temp = calloc(n, sizeof(uint8_t));
-                rc4(temp, n, key);
-                free(temp);
-        }
+    if (n > 0)
+    {
+        uint8_t* temp = calloc(n, sizeof(uint8_t));
+        rc4(temp, n, key);
+        free(temp);
+    }
 }
 
 void rc4(uint8_t *buffer_ptr, size_t buffer_len, struct rc4_key *key)
@@ -74,7 +76,7 @@ void rc4(uint8_t *buffer_ptr, size_t buffer_len, struct rc4_key *key)
     key->y = y;
 }
 
-size_t pass_hash(char* indata, uint8_t *seed)
+bool pass_hash(char *indata, uint8_t *seed, size_t* outlen)
 {
     char data[512];
     char digit[5];
@@ -102,10 +104,17 @@ size_t pass_hash(char* indata, uint8_t *seed)
     {
         digit[2] = data[i * 2];
         digit[3] = data[i * 2 + 1];
+
+        if (!isxdigit(digit[2]) || !isxdigit(digit[3]))
+        {
+            return false;
+        }
+
         sscanf(digit, "%x", &hex);
         seed[i] = hex;
     }
 
-    return len;
-}
+    *outlen = len;
 
+    return true;
+}
