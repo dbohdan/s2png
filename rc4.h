@@ -30,7 +30,7 @@ void drop_n(
     size_t n,
     struct rc4_key *key_ptr
 );
-bool pass_hash(
+bool pass_scan(
     char* hex_pass,
     uint8_t *seed_data_ptr,
     size_t* seed_data_len_ptr

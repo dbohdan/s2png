@@ -51,7 +51,7 @@ bool init_rc4(char *password, struct rc4_key *key)
         return true;
     }
 
-    valid = pass_hash(password, seed, &n);
+    valid = pass_scan(password, seed, &n);
     if (!valid) {
         fprintf(stderr, "error: password is not a hexadecimal string\n");
         return false;

@@ -78,7 +78,7 @@ void rc4(uint8_t *buffer_ptr, size_t buffer_len, struct rc4_key *key_ptr)
     key_ptr->y = y;
 }
 
-bool pass_hash(
+bool pass_scan(
     char *hex_pass_ptr,
     uint8_t *seed_data_ptr,
     size_t* seed_data_len_ptr
