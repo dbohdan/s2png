@@ -58,10 +58,12 @@ bool init_rc4(char *password, struct rc4_key *key)
         fprintf(stderr, "error: password is not a hexadecimal string\n");
         return false;
     }
+
     if (n == 0) {
         fprintf(stderr, "error: password is empty\n");
         return false;
     }
+
     rc4_prepare_key(seed, n, key);
     rc4_drop_n(RC4_DROP_N, key);
 
@@ -84,10 +86,13 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
 
     /* Get the data size stored in the bottom right pixel of the image. */
     uint32_t c = gdImageGetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1);
+
     size_t data_size = (gdImageRed(im, c) << 8*2) +
-                    (gdImageGreen(im, c) << 8*1) + (gdImageBlue(im, c));
+                       (gdImageGreen(im, c) << 8*1) +
+                       (gdImageBlue(im, c));
 
     fout = fopen(fout_fn, "wb");
+
     if (fout == NULL) {
         fprintf(stderr, "error: can't open file `%s' for output\n", fout_fn);
         return EX_CANTCREAT;
@@ -108,17 +113,22 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
     for (y = 0; y < gdImageSY(im); y++) {
         for (x = 0; x < gdImageSX(im); x++) {
             c = gdImageGetPixel(im, x, y);
+
             buf[0] = gdImageRed(im, c);
             buf[1] = gdImageGreen(im, c);
             buf[2] = gdImageBlue(im, c);
+
             if (password != NULL) {
                 rc4_encrypt(buf, 3, &key);
             }
+
             if (written_bytes >= data_size) {
                 break; /* FIXME */
             } else {
-                nb = (written_bytes + 3 > data_size ?
-                     data_size - written_bytes : 3);
+                nb = written_bytes + 3 > data_size ?
+                     data_size - written_bytes :
+                     3;
+
                 written_bytes += fwrite(buf, 1, nb, fout);
             }
         }
@@ -139,6 +149,7 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
     fin = fopen(fin_fn, "rb");
     fstat(fileno(fin), &fin_stat);
     size_t data_size = fin_stat.st_size;
+
     if (data_size > MAX_FILE_SIZE) {
         fprintf(stderr,
                 "error: file `%s' too large to encode (over %u bytes)\n",
@@ -150,14 +161,15 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
     uint32_t banner_height = (strcmp(banner, "") == 0 ? 0 : BANNER_HEIGHT);
 
     if (make_square) {
-        /* Solve for x: (x - banner_height) * x = data_size / 3.0 */
-        image_width = ceil(0.5 * sqrt(4 * (float) data_size / 3.0 +
-                           (float) banner_height * (float) banner_height)
-                           + (float) banner_height);
+        /* Solve for x: x * (x - banner_height) = data_size / 3.0 */
+        float d = sqrt(4 * (float) data_size / 3.0 +
+                       (float) banner_height * (float) banner_height);
+
+        image_width = ceil(0.5 * d + (float) banner_height);
     }
 
     uint32_t image_height = ceil(((float) data_size / (float) image_width / 3.0)
-                            + (float) banner_height);
+                                 + (float) banner_height);
 
     /* Prevent data corruption on images with no banner. On such images
        the bottom right pixel would be used for data and then overwritten
@@ -185,7 +197,9 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
         if (password != NULL) {
             rc4_encrypt(buf, 3, &key);
         }
+
         total_bytes += bytes_read;
+
         gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],
                         buf[2]));
 
@@ -204,9 +218,11 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
     gdImageFilledRectangle(im, 0, gdImageSY(im) - banner_height,
                            image_width - 1, gdImageSY(im) + banner_height,
                            gdImageColorAllocate(im, 255, 255, 255));
+
     gdImageString(im, (gdFontPtr) gdFontGetTiny(), 5,
                   gdImageSY(im) - banner_height, (unsigned char *) banner,
                   gdImageColorAllocate(im, 0, 0, 0));
+
     /* Store the data_size in the bottom right ("last") pixel. */
     gdImageSetPixel(im, gdImageSX(im) - 1, gdImageSY(im) - 1,
                     gdImageColorAllocate(im, (data_size & 0xff0000) >> 8*2,
@@ -350,12 +366,14 @@ int main(int argc, char **argv)
     /* If no output file name is given we generate one. */
     if (out_fn == NULL) {
         out_fn = calloc(strlen(in_fn) + strlen(".orig"), sizeof(char));
+
         if (mode == MODE_DECODE) {
             if (strcasecmp((in_fn + strlen(in_fn) - 4), ".png") == 0) {
                 strncpy(out_fn, in_fn, strlen(in_fn) - 4);
             } else {
                 strcpy(out_fn, in_fn);
                 strcat(out_fn, ".orig");
+
                 fprintf(stderr, "warning: file `%s' will be saved as `%s'\n",
                         in_fn, out_fn);
             }
@@ -375,7 +393,11 @@ int main(int argc, char **argv)
 
     /* Perform the chosen operation. */
     if (mode == MODE_ENCODE) {
-        return file_to_png(in_fn, out_fn, image_width, make_square, banner_text,
+        return file_to_png(in_fn,
+                           out_fn,
+                           image_width,
+                           make_square,
+                           banner_text,
                            password);
     } else if (mode == MODE_DECODE) {
         return png_to_file(in_fn, out_fn, password);
