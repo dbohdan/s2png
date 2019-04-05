@@ -75,7 +75,7 @@ The contents of `build/` will run on Windows machines without MSYS2.
 Usage
 -----
 
-    s2png ("stuff to png") version 0.8.0
+    s2png ("stuff to png") version 0.9.0
     usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
                  [-p password] [-e | -d] file
     

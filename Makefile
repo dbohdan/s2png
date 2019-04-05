@@ -20,14 +20,8 @@ LIBS    = `pkg-config --libs gdlib || echo -lgd` -lm
 
 all: appveyor.yml test README.md
 
-s2png: s2png.o rc4.o
-	$(CC) $(LDFLAGS) s2png.o rc4.o -o $@ $(LIBS)
-
-s2png.o: s2png.c
-	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
-
-rc4.o: rc4.c
-	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+s2png:
+	$(CC) $(LDFLAGS) s2png.c -o $@ $(LIBS)
 
 install: installdirs
 	$(INSTALL_PROGRAM) s2png $(DESTDIR)$(bindir)/s2png
@@ -39,7 +33,7 @@ uninstall:
 	rm -f $(DESTDIR)$(bindir)/s2png
 
 clean:
-	-rm -f *.o s2png s2png.exe
+	-rm -f s2png s2png.exe
 
 appveyor.yml: appveyor.in s2png
 	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < $< > $@

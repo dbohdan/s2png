@@ -25,9 +25,11 @@
 
 #include "gd.h"
 #include "gdfontt.h"
+
+#define RC4_IMPLEMENTATION
 #include "rc4.h"
 
-#define VERSION_STR ("0.8.0")
+#define VERSION_STR ("0.9.0")
 #define BANNER_HEIGHT 8
 #define MODE_NONE 0
 #define MODE_ENCODE 1
@@ -51,7 +53,7 @@ bool init_rc4(char *password, struct rc4_key *key)
         return true;
     }
 
-    valid = pass_scan(password, seed, &n);
+    valid = rc4_pass_scan(password, seed, &n);
     if (!valid) {
         fprintf(stderr, "error: password is not a hexadecimal string\n");
         return false;
@@ -60,8 +62,8 @@ bool init_rc4(char *password, struct rc4_key *key)
         fprintf(stderr, "error: password is empty\n");
         return false;
     }
-    prepare_key(seed, n, key);
-    drop_n(RC4_DROP_N, key);
+    rc4_prepare_key(seed, n, key);
+    rc4_drop_n(RC4_DROP_N, key);
 
     return true;
 }
@@ -110,7 +112,7 @@ int png_to_file(char *fin_fn, char *fout_fn, char *password)
             buf[1] = gdImageGreen(im, c);
             buf[2] = gdImageBlue(im, c);
             if (password != NULL) {
-                rc4(buf, 3, &key);
+                rc4_encrypt(buf, 3, &key);
             }
             if (written_bytes >= data_size) {
                 break; /* FIXME */
@@ -181,7 +183,7 @@ int file_to_png(char *fin_fn, char *fout_fn, uint32_t image_width,
     /* Read the input file in sets of three bytes. */
     while ((bytes_read = fread(buf, 1, 3, fin)) > 0) {
         if (password != NULL) {
-            rc4(buf, 3, &key);
+            rc4_encrypt(buf, 3, &key);
         }
         total_bytes += bytes_read;
         gdImageSetPixel(im, x, y, gdImageColorAllocate(im, buf[0], buf[1],
