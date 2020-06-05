@@ -1,49 +1,43 @@
-prefix      = /usr/local
+PROJECT ?= s2png
 
-exec_prefix = $(prefix)
-bindir      = $(exec_prefix)/bin
-datarootdir = $(prefix)/share
-datadir     = $(datarootdir)
-mandir      = $(datarootdir)/man
-man1dir     = $(mandir)/man1
+BUILD_USER ?= $(USER)
+USER_TEMP ?= /tmp/$(BUILD_USER)
+PROJECT_TEMP ?= $(USER_TEMP)/$(PROJECT)-rust
 
-INSTALL         = install
-INSTALL_PROGRAM = $(INSTALL)
-INSTALL_DATA    = $(INSTALL) -m 644
+TARGET ?= x86_64-unknown-linux-musl
+BUILD_OPTS ?= --target $(TARGET)
+BUILD_OPTS_WITH_DIR ?= $(BUILD_OPTS) --target-dir $(PROJECT_TEMP)
 
-DESTDIR =
+dev: temp-dir
+	# A workaround for https://github.com/rust-lang/rust/issues/46981
+	find Cargo.* src/ tests/ | entr -r sh -c 'cargo check $(BUILD_OPTS_WITH_DIR) < /dev/null'
 
-CFLAGS  = -g -O2 -Wall -Wextra -pedantic -std=c99 -Wstrict-aliasing -Wstrict-overflow
-LDFLAGS =
-INCS    = `pkg-config --cflags gdlib || gdlib-config --cflags`
-LIBS    = `pkg-config --libs gdlib || echo -lgd` -lm
+debug: temp-dir
+	cargo build $(BUILD_OPTS_WITH_DIR)
 
-all: appveyor.yml test README.md
+install:
+	install $(PROJECT_TEMP)/$(TARGET)/release/$(PROJECT) /usr/local/bin
+	strip /usr/local/bin/$(PROJECT)
 
-s2png:
-	$(CC) $(LDFLAGS) s2png.c -o $@ $(LIBS)
+release: temp-dir
+	cargo build $(BUILD_OPTS_WITH_DIR) --release
 
-install: installdirs
-	$(INSTALL_PROGRAM) s2png $(DESTDIR)$(bindir)/s2png
+run:
+	cargo run $(BUILD_OPTS_WITH_DIR) -- $(ARGS)
 
-installdirs:
-	mkdir -p $(DESTDIR)$(bindir)
+temp-dir:
+	@-mkdir -m 0700 $(USER_TEMP)/ 2> /dev/null
+	@-mkdir $(PROJECT_TEMP)/ 2> /dev/null
+
+test: test-unit test-integration
+
+test-integration: debug
+	S2PNG_COMMAND="$(PROJECT_TEMP)/$(TARGET)/debug/$(PROJECT)" sh tests/test.sh
+
+test-unit:
+	cargo test $(BUILD_OPTS_WITH_DIR)
 
 uninstall:
-	rm -f $(DESTDIR)$(bindir)/s2png
+	rm /usr/local/bin/$(PROJECT)
 
-clean:
-	-rm -f s2png s2png.exe
-
-appveyor.yml: appveyor.in s2png
-	sed "s/VERSION/$$(./s2png | awk '/version/ { print $$6 }')/" < $< > $@
-
-# The script uses the output of `s2png -h`, so README.md must have s2png as
-# a prerequisite.
-README.md: README.in s2png
-	./scripts/gen-readme.sh < $< > $@
-
-test: s2png
-	./scripts/test.sh
-
-.PHONY: all install installdirs uninstall clean test
+PHONY: dev install release temp-dir test test-integration test-unit uninstall

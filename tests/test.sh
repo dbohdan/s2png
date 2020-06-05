@@ -1,17 +1,17 @@
-#!/bin/sh
+# !/bin/sh
 # Test s2png encoding and decoding operations, as well as encryption, for
 # causing data corruption.
 
 opstest() {
     testfile="$1"
 
-    ./s2png -s -o "$testfile.png" "$testfile" || echo File encoding failed.
-    ./s2png -o "$testfile.out" "$testfile.png" || echo File decoding failed.
+    "$S2PNG_COMMAND" -s -o "$testfile.png" "$testfile" || echo File encoding failed.
+    "$S2PNG_COMMAND" -o "$testfile.out" "$testfile.png" || echo File decoding failed.
 
     # printf password | md5sum | cut -c 1-32
     password=5f4dcc3b5aa765d61d8327deb882cf99
-    ./s2png -s -o "$testfile.png" -b "Hello" -p "$password" "$testfile" || echo File encryption failed.
-    ./s2png -o "$testfile.out2" -p "$password" "$testfile.png" || echo File decryption failed.
+    "$S2PNG_COMMAND" -s -o "$testfile.png" -b "Hello" -p "$password" "$testfile" || echo File encryption failed.
+    "$S2PNG_COMMAND" -o "$testfile.out2" -p "$password" "$testfile.png" || echo File decryption failed.
 
     diff "$testfile" "$testfile.out" || echo Basic test failed.
     diff "$testfile" "$testfile.out2" || echo Encryption test failed.
@@ -26,11 +26,11 @@ sizetest() {
     decoded="$4"
 
     dd "bs=$n" count=1 if=/dev/urandom of="$testfile" 2> /dev/null
-    ./s2png -e -o "$encoded" -b "" -w 10 "$testfile"
-    ./s2png -d -o "$decoded" "$encoded"
-    if ! diff "$testfile" "$decoded"; then
+    "$S2PNG_COMMAND" -e -o "$encoded" -b "" -w 10 "$testfile"
+    "$S2PNG_COMMAND" -d -o "$decoded" "$encoded"
+    if ! diff "$testfile" "$decoded" > /dev/null; then
         echo Corruption at file size "$n".
-        identify a.png
+        identify "$testfile"
     fi
 }
 

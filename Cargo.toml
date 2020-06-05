@@ -1,0 +1,14 @@
+[package]
+name = "s2png"
+version = "0.10.0"
+authors = ["D. Bohdan"]
+edition = "2018"
+
+[dependencies]
+exitcode = "1.1"
+getopts = "0.2"
+hex = "0.4"
+image = "0.23"
+
+[dev-dependencies]
+regex = "1"

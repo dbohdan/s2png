@@ -1,6 +1,10 @@
-language: c
+language: rust
+cache: /tmp/travis/csv2html-rust/
 addons:
   apt:
     packages:
-      - libgd-dev
-script: make
+      - musl-tools
+before_install:
+  - rustup target add x86_64-unknown-linux-musl
+script:
+  - make test

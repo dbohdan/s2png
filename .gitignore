@@ -1,11 +1,5 @@
-description-pak
-doc-pak
-s2png
-*.deb
-*.png
-pymd.py
-README.html
-s2png.o
-rc4.o
-core
-
+/*.deb
+/*.png
+/detritus
+/README.html
+/target
