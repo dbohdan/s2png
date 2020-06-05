@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 # Use s2png to produce a corrupted version of the input data (for fun).
 # This requires GraphicsMagick or ImageMagick.
 # The original file is not affected.  Try it out on text.
@@ -11,9 +11,9 @@ quality="$3"
 [ "$quality" != "" ] && shift 3 && s2png_args="$*"
 
 
-if which gm > /dev/null; then
+if command -v gm > /dev/null; then
     convert="gm convert"
-elif which convert > /dev/null; then
+elif command -v convert > /dev/null; then
     convert=convert
 else
     echo "Can't find GraphicsMagick or ImageMagick."
