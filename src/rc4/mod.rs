@@ -42,7 +42,15 @@ impl cmp::Eq for Key {}
 
 impl Key {
     pub fn scan_pass(hex_pass: &str) -> Option<Vec<u8>> {
-        hex::decode(hex_pass).ok()
+        let mut even_pass = hex_pass.to_string();
+
+        // This is how the C code treated passwords with an odd number of
+        // characters.
+        if even_pass.len() % 2 == 1 {
+            even_pass.push('0');
+        }
+
+        hex::decode(&even_pass).ok()
     }
 
     pub fn new(seed: &[u8]) -> Key {
