@@ -6,6 +6,9 @@
    at Thu Jan  8 13:49:54 1998.
    The original bdf was holding following copyright:
    "Libor Skarvada, libor@informatics.muni.cz"
+
+   On June 5, 2020 this file was ported from C to Rust by
+   D. Bohdan.
  */
 
 pub static TINY: [[u8; 40]; 256] = [[
