@@ -138,5 +138,6 @@ You can decode `xyz.png` to `decoded.mp3` with
 
 s2png is licensed under the GNU GPL 2.0.  See the file `LICENSE`.  The
 implementation of the RC4 streaming cypher in [`src/rc4/mod.rs`](src/rc4/mod.rs)
-is in the public domain.  The font from libgd is distributed under its BSD-like
-license.  See the file [`src/font/COPYING.libgd`](src/font/COPYING.libgd).
+is in the public domain.  The font from [libgd](https://github.com/libgd/libgd)
+is distributed under its BSD-like license.  See the file
+[`src/font/COPYING.libgd`](src/font/COPYING.libgd).
