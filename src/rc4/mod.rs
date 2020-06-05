@@ -108,7 +108,7 @@ impl Key {
     }
 
     pub fn drop(&mut self, n: usize) {
-        // Suboptimal, but we are not going drop millions of values.
+        // Suboptimal, but we are not going to drop millions of values.
         let mut buffer: Vec<u8> = Vec::new();
         buffer.resize(n, 0);
         self.encrypt(&mut buffer);
