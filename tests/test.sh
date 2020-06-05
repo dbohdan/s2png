@@ -1,4 +1,4 @@
-# !/bin/sh
+#! /bin/sh
 # Test s2png encoding and decoding operations, as well as encryption, for
 # causing data corruption.
 
