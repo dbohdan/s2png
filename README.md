@@ -6,10 +6,12 @@
 This program encodes arbitrary binary data in PNG images that look like noise
 and decodes it back.  It was originally developed by k0wax
 [on SourceForge](http://sourceforge.net/projects/s2png/).  I started this fork
-to fix a problem that caused s2png 0.01 to segfault when compiled
-on a modern operating system.  The fork has since accumulated various
-improvements and has been ported to Rust.  It remains data-compatible with
-the original (if you don't use the toy encryption feature).
+to fix a problem that caused s2png 0.01 to segfault when compiled on a modern
+operating system.  The fork has since accumulated various bug fixes and
+improvements.  Most recently, I have ported it to Rust, which, among other
+things, makes it easier to distribute s2png as a static binary.  The fork
+remains data-compatible with the original (if you don't use the toy encryption
+feature).
 
 
 ## Installation
@@ -23,7 +25,7 @@ for Windows.
 
 ### Building on Debian and Ubuntu
 
-Follow the instructions to build a static Linux binary of `s2png` from source
+Follow the instructions to build a static Linux binary of s2png from source
 on recent Debian and Ubuntu.
 
 1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the stable MUSL
@@ -49,7 +51,7 @@ sudo apt install build-essential musl-tools
 
 ### Cross-compiling for Windows
 
-Follow the instructions to build a 32-bit Windows binary of `s2png` on recent
+Follow the instructions to build a 32-bit Windows binary of s2png on recent
 Debian and Ubuntu.
 
 1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the i686 GNU ABI
