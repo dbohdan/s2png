@@ -75,7 +75,7 @@ linker = "/usr/bin/i686-w64-mingw32-gcc"
     git clone https://github.com/dbohdan/s2png
     cd s2png
     make release TARGET=i686-pc-windows-gnu
-    cp "/tmp/$USER/s2png-rust/i686-pc-windows-gnu/release/s2png.exe" .
+    cp "/tmp/$USER/cargo/s2png/i686-pc-windows-gnu/release/s2png.exe" .
 
 
 ## Usage

@@ -2,7 +2,7 @@ PROJECT ?= s2png
 
 BUILD_USER ?= $(USER)
 USER_TEMP ?= /tmp/$(BUILD_USER)
-PROJECT_TEMP ?= $(USER_TEMP)/$(PROJECT)-rust
+PROJECT_TEMP ?= $(USER_TEMP)/cargo/$(PROJECT)
 
 TARGET ?= x86_64-unknown-linux-musl
 BUILD_OPTS ?= --target $(TARGET)
@@ -27,7 +27,7 @@ run:
 
 temp-dir:
 	@-mkdir -m 0700 $(USER_TEMP)/ 2> /dev/null
-	@-mkdir $(PROJECT_TEMP)/ 2> /dev/null
+	@-mkdir -p $(PROJECT_TEMP)/ 2> /dev/null
 
 test: test-unit test-integration
 

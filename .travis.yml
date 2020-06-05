@@ -1,5 +1,5 @@
 language: rust
-cache: /tmp/travis/s2png-rust/
+cache: /tmp/travis/cargo/s2png/
 addons:
   apt:
     packages:
