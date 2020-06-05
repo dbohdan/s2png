@@ -1,5 +1,5 @@
 language: rust
-cache: /tmp/travis/csv2html-rust/
+cache: /tmp/travis/s2png-rust/
 addons:
   apt:
     packages:
