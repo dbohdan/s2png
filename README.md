@@ -14,9 +14,12 @@ the original (if you don't use the toy encryption feature).
 
 ## Installation
 
-Prebuilt binaries are available for x86_64 Linux and i686 Windows.  They are
+Prebuilt binaries are available for x86\_64 Linux and i686 Windows.  They are
 attached to releases on the
-[Releases](https://github.com/dbohdan/s2png/releases) page.
+[Releases](https://github.com/dbohdan/s2png/releases) page.  Development
+(unstable) binaries are also
+[automatically built](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts)
+for Windows.
 
 ### Building on Debian and Ubuntu
 
