@@ -6,17 +6,76 @@
 This program encodes arbitrary binary data in PNG images that look like noise
 and decodes it back.  It was originally developed by k0wax
 [on SourceForge](http://sourceforge.net/projects/s2png/).  I started this fork
-to fix a libgd-related problem that caused s2png 0.01 to segfault when compiled
+to fix a problem that caused s2png 0.01 to segfault when compiled
 on a modern operating system.  The fork has since accumulated various
 improvements and has been ported to Rust.  It remains data-compatible with
 the original (if you don't use the toy encryption feature).
 
 
-## Building and installing
+## Installation
 
-### *nix
+Prebuilt binaries are available for x86_64 Linux and i686 Windows.  They are
+attached to releases on the
+[Releases](https://github.com/dbohdan/s2png/releases) page.
 
-### Windows
+### Building on Debian and Ubuntu
+
+Follow the instructions to build a static Linux binary of `s2png` from source
+on recent Debian and Ubuntu.
+
+1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the stable MUSL
+target for your CPU.
+
+```sh
+rustup target add x86_64-unknown-linux-musl
+```
+
+2\. Install the build dependencies.
+
+```sh
+sudo apt install build-essential musl-tools
+```
+
+3\. Clone this repository.  Build and install the binary.
+
+    git clone https://github.com/dbohdan/s2png
+    cd s2png
+    make test
+    make release
+    sudo make install "BUILD_USER=$USER"
+
+### Cross-compiling for Windows
+
+Follow the instructions to build a 32-bit Windows binary of `s2png` on recent
+Debian and Ubuntu.
+
+1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the i686 GNU ABI
+Windows target.
+
+```sh
+rustup target add i686-pc-windows-gnu
+```
+
+2\. Install the build dependencies.
+
+```sh
+sudo apt install build-essential mingw-w64
+```
+
+3\. Configure Cargo for cross-compilation.  Put the following in
+`~/.cargo/config`.
+
+```toml
+[target.i686-pc-windows-gnu]
+linker = "/usr/bin/i686-w64-mingw32-gcc"
+```
+
+4\. Clone this repository.  Build the binary.
+
+    git clone https://github.com/dbohdan/s2png
+    cd s2png
+    make release TARGET=i686-pc-windows-gnu
+    cp "/tmp/$USER/s2png-rust/i686-pc-windows-gnu/release/s2png.exe" .
 
 
 ## Usage
@@ -73,6 +132,6 @@ You can decode `xyz.png` to `decoded.mp3` with
 ## License
 
 s2png is licensed under the GNU GPL 2.0.  See the file `LICENSE`.  The
-implementation of the RC4 streaming cypher in `src/rc4/mod.rs` is in the public
-domain.  The font from libgd is distributed under its BSD-like license.  See
-the file `src/font/COPYING.libgd`.
+implementation of the RC4 streaming cypher in [`src/rc4/mod.rs`](src/rc4/mod.rs)
+is in the public domain.  The font from libgd is distributed under its BSD-like
+license.  See the file [`src/font/COPYING.libgd`](src/font/COPYING.libgd).
