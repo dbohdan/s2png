@@ -433,6 +433,13 @@ fn file_to_png<P: AsRef<Path>, Q: AsRef<Path>>(
         ));
     }
 
+    if image_height == 0 {
+        return Err((
+            exitcode::DATAERR,
+            "error: can't encode empty file with no banner".to_string(),
+        ));
+    }
+
     match key_opt {
         None => {}
         Some(key) => key.encrypt(&mut buffer),
