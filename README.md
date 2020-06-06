@@ -8,10 +8,9 @@ and decodes it back.  It was originally developed by k0wax
 [on SourceForge](http://sourceforge.net/projects/s2png/).  I started this fork
 to fix a problem that caused s2png 0.01 to segfault when compiled on a modern
 operating system.  The fork has since accumulated various bug fixes and
-improvements.  Most recently, I have ported it to Rust, which, among other
-things, makes it easier to distribute s2png as a static binary.  The fork
-remains data-compatible with the original (if you don't use the toy encryption
-feature).
+improvements.  Most recently, I have ported it to Rust.  Among other things,
+this makes it easier to distribute s2png as a static binary.  The fork remains
+data-compatible with the original if you don't use the toy encryption feature.
 
 
 ## Installation
@@ -51,8 +50,8 @@ sudo apt install build-essential musl-tools
 
 ### Cross-compiling for Windows
 
-Follow the instructions to build a 32-bit Windows binary of s2png on recent
-Debian and Ubuntu.
+Follow the instructions to build a 32-bit Intel Windows binary of s2png on
+recent Debian and Ubuntu.
 
 1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the i686 GNU ABI
 Windows target.
@@ -129,7 +128,7 @@ the command
 
     s2png decode_me.mp3.png
 
-You can decode `xyz.png` to `decoded.mp3` with
+Decode `xyz.png` to `decoded.mp3` with
 
     s2png -o decoded.mp3 xyz.png
 
