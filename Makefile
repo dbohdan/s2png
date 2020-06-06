@@ -32,7 +32,7 @@ temp-dir:
 test: test-unit test-integration
 
 test-integration: debug
-	S2PNG_COMMAND="$(PROJECT_TEMP)/$(TARGET)/debug/$(PROJECT)" sh tests/test.sh
+	S2PNG_COMMAND="$(PROJECT_TEMP)/$(TARGET)/debug/$(PROJECT)" cargo test $(BUILD_OPTS_WITH_DIR) -- --ignored
 
 test-unit:
 	cargo test $(BUILD_OPTS_WITH_DIR)

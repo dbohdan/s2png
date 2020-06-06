@@ -11,4 +11,7 @@ hex = "0.4"
 image = "0.23"
 
 [dev-dependencies]
+file_diff = "1.0.0"
 regex = "1"
+tempfile = "3.1"
+rand = "0.7"
