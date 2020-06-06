@@ -155,22 +155,14 @@ fn random_vec(len: usize) -> Vec<u8> {
 #[ignore]
 fn roundtrip_basic_random() {
     let empty: Vec<String> = vec![];
-    roundtrip(
-        &random_vec(0xffff),
-        &empty,
-        &empty,
-    );
+    roundtrip(&random_vec(0xffff), &empty, &empty);
 }
 
 #[test]
 #[ignore]
 fn roundtrip_square_random() {
     let empty: Vec<String> = vec![];
-    roundtrip(
-        &random_vec(0xffff),
-        vec!["-s"],
-        &empty,
-    );
+    roundtrip(&random_vec(0xffff), vec!["-s"], &empty);
 }
 
 #[test]
@@ -179,31 +171,19 @@ fn roundtrip_password_random() {
     // printf password | md5sum | cut -c 1-32
     let password_extra = ["-p", "5f4dcc3b5aa765d61d8327deb882cf99"];
 
-    roundtrip(
-        &random_vec(0xffff),
-        &password_extra,
-        &password_extra,
-    );
+    roundtrip(&random_vec(0xffff), &password_extra, &password_extra);
 }
 
 #[test]
 #[ignore]
 fn roundtrip_no_banner_random() {
-    roundtrip(
-        &random_vec(0xffff),
-        vec!["-e", "-b", ""],
-        vec!["-d"],
-    );
+    roundtrip(&random_vec(0xffff), vec!["-e", "-b", ""], vec!["-d"]);
 }
 
 #[test]
 #[ignore]
 fn empty_file() {
-    roundtrip(
-        &random_vec(0),
-        vec!["-e"],
-        vec!["-d"],
-    )
+    roundtrip(&random_vec(0), vec!["-e"], vec!["-d"])
 }
 
 #[test]
@@ -223,11 +203,7 @@ fn empty_file_no_banner() {
 #[ignore]
 fn small_file_corruption_1_15() {
     for i in 1..=15 {
-        roundtrip(
-            &random_vec(i),
-            vec!["-e", "-b", "", "-w", "10"],
-            vec!["-d"],
-        )
+        roundtrip(&random_vec(i), vec!["-e", "-b", "", "-w", "10"], vec!["-d"])
     }
 }
 
@@ -235,10 +211,6 @@ fn small_file_corruption_1_15() {
 #[ignore]
 fn small_file_corruption_16_255() {
     for i in 16..=255 {
-        roundtrip(
-            &random_vec(i),
-            vec!["-e", "-b", "", "-w", "10"],
-            vec!["-d"],
-        )
+        roundtrip(&random_vec(i), vec!["-e", "-b", "", "-w", "10"], vec!["-d"])
     }
 }
