@@ -16,9 +16,10 @@ build_script:
 
 test_script:
   - cmd: cargo test
+  - cmd: cargo test -- --ignored
 
 after_test:
-  - cmd: copy %S2PNG_COMMAND% s2png.exe
+  - cmd: copy %S2PNG_COMMAND% s2png-win32.exe
 
 artifacts:
-  - path: s2png.exe
+  - path: s2png-win32.exe
