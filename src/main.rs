@@ -261,8 +261,8 @@ fn is_png_file<P: AsRef<Path>>(path: P) -> std::io::Result<bool> {
     let mut buf = Vec::<u8>::new();
 
     buf.resize(8, 0);
-    let mut file = File::open(path)?;
-    file.read_exact(&mut buf)?;
+    let file = File::open(path)?;
+    file.take(8).read(&mut buf)?;
 
     Ok(buf == png_sign)
 }
