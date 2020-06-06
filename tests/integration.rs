@@ -198,6 +198,41 @@ fn roundtrip_no_banner_random() {
 
 #[test]
 #[ignore]
+fn empty_file() {
+    roundtrip(
+        &random_vec(0),
+        vec!["-e"],
+        vec!["-d"],
+    )
+}
+
+#[test]
+#[ignore]
+fn empty_file_no_banner() {
+    let empty_file = NamedTempFile::new().unwrap();
+    let input_fn = empty_file.path().to_str().unwrap();
+    let output_file = NamedTempFile::new().unwrap();
+    let output_fn = output_file.path().to_str().unwrap();
+
+    let out1 = s2png(&vec!["-o", &output_fn, "-b", "", &input_fn]).unwrap();
+    eprintln!("{}", out1.stderr);
+    assert_eq!(out1.code, exitcode::DATAERR);
+}
+
+#[test]
+#[ignore]
+fn small_file_corruption_1_15() {
+    for i in 1..=15 {
+        roundtrip(
+            &random_vec(i),
+            vec!["-e", "-b", "", "-w", "10"],
+            vec!["-d"],
+        )
+    }
+}
+
+#[test]
+#[ignore]
 fn small_file_corruption_16_255() {
     for i in 16..=255 {
         roundtrip(
