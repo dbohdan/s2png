@@ -66,12 +66,14 @@ where
     I1: IntoIterator<Item = S1>,
     I2: IntoIterator<Item = S2>,
 {
-    let mut temp_file = NamedTempFile::new().unwrap();
-    temp_file.write_all(data).unwrap();
+    let mut input_file = NamedTempFile::new().unwrap();
+    input_file.write_all(data).unwrap();
+    let png_file = NamedTempFile::new().unwrap();
+    let extracted_file = NamedTempFile::new().unwrap();
 
-    let input_fn = temp_file.path().to_str().unwrap();
-    let png_fn = format!("{}.png", &input_fn);
-    let extracted_fn = format!("{}.out", &input_fn);
+    let input_fn = input_file.path().to_str().unwrap();
+    let png_fn = png_file.path().to_str().unwrap();
+    let extracted_fn = extracted_file.path().to_str().unwrap();
 
     let mut encode_args =
         vec!["-o".to_string(), png_fn.to_string(), input_fn.to_string()];
