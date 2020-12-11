@@ -73,9 +73,9 @@ This version can encode files of up to {0} bytes.
   -w width      set the width of the PNG image output ({1} by default)
   -s            make the output image roughly square
   -b text       custom banner text (\"\" for no banner)
-  -p password   encrypt/decrypt the output with a hexadecimal password
-                using RC4
-                (Warning: do not use this if you want actual secrecy!)
+  -p password   encrypt/decrypt the output with a hexadecimal passphrase
+                using RC4 (Warning: completely insecure! Do not use this if
+                you want actual secrecy.)
 
 Normally s2png detects which operation to perform by the file type. You can
 override this behavior with the following switches:
