@@ -41,16 +41,16 @@ impl cmp::PartialEq for Key {
 impl cmp::Eq for Key {}
 
 impl Key {
-    pub fn scan_pass(hex_pass: &str) -> Option<Vec<u8>> {
-        let mut even_pass = hex_pass.to_string();
+    pub fn scan_hex_key(hex_key: &str) -> Option<Vec<u8>> {
+        let mut even = hex_key.to_string();
 
-        // This is how the C code treated passwords with an odd number of
+        // This is how the C code treated keys with an odd number of
         // characters.
-        if even_pass.len() % 2 == 1 {
-            even_pass.push('0');
+        if even.len() % 2 == 1 {
+            even.push('0');
         }
 
-        hex::decode(&even_pass).ok()
+        hex::decode(&even).ok()
     }
 
     pub fn new(seed: &[u8]) -> Key {
@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn test_pass_scan_1() {
-        let bytes = Key::scan_pass("0123456789abcdef");
+        let bytes = Key::scan_hex_key("0123456789abcdef");
         assert_eq!(
             bytes,
             Some(vec![0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef])
@@ -132,7 +132,7 @@ mod tests {
 
     #[test]
     fn test_pass_scan_2() {
-        let bytes = Key::scan_pass("WHAT THE HECK?!");
+        let bytes = Key::scan_hex_key("WHAT THE HECK?!");
         assert_eq!(bytes, None);
     }
 

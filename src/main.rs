@@ -47,7 +47,7 @@ struct Config {
     input: PathBuf,
     mode: Mode,
     output: Option<PathBuf>,
-    password: Option<String>,
+    hex_key: Option<String>,
     square: bool,
     width: u32,
 }
@@ -56,7 +56,7 @@ fn usage() {
     println!("s2png (\"stuff to png\") version {}", VERSION);
     println!(
         "usage: s2png [-h] [-o filename] [-w width ({}) | -s] [-b text]
-             [-p password] [-e | -d] file",
+             [-p hex-key] [-e | -d] file",
         DEFAULT_WIDTH
     );
 }
@@ -73,7 +73,7 @@ This version can encode files of up to {0} bytes.
   -w width      set the width of the PNG image output ({1} by default)
   -s            make the output image roughly square
   -b text       custom banner text (\"\" for no banner)
-  -p password   encrypt/decrypt the output with a hexadecimal passphrase
+  -p hex-key    encrypt/decrypt the output with a hexadecimal key
                 using RC4 (Warning: completely insecure! Do not use this if
                 you want actual secrecy.)
 
@@ -96,7 +96,7 @@ fn cli() -> Result<Config, ()> {
     opts.optopt("w", "", "width", "WIDTH");
     opts.optflag("s", "", "square");
     opts.optopt("b", "", "banner", "TEXT");
-    opts.optopt("p", "", "password", "PASSWORD");
+    opts.optopt("p", "", "hex-key", "HEXKEY");
 
     opts.optflag("e", "", "encode");
     opts.optflag("d", "", "decode");
@@ -147,7 +147,7 @@ fn cli() -> Result<Config, ()> {
         input: PathBuf::from(file),
         mode,
         output: matches.opt_str("o").map(|s| PathBuf::from(s)),
-        password: matches.opt_str("p"),
+        hex_key: matches.opt_str("p"),
         square: matches.opt_present("s"),
         width,
     })
@@ -173,8 +173,8 @@ fn main() {
     };
 
     let mut key_opt =
-        config.password.clone().and_then(|hex_pass| {
-            match init_rc4(&hex_pass) {
+        config.hex_key.clone().and_then(|hex_key| {
+            match init_rc4(&hex_key) {
                 Ok(key) => Some(key),
                 Err(err) => {
                     eprintln!("{}", err);
@@ -236,18 +236,18 @@ fn orig_filename<P: AsRef<Path>>(path: &P) -> PathBuf {
     stemmed
 }
 
-fn init_rc4(password: &str) -> Result<Key, String> {
-    let seed = match Key::scan_pass(password) {
+fn init_rc4(hex_key: &str) -> Result<Key, String> {
+    let seed = match Key::scan_hex_key(hex_key) {
         Some(x) => x,
         None => {
             return Err(
-                "error: password is not a hexadecimal string".to_string()
+                "error: hex key is not a hexadecimal string".to_string()
             )
         }
     };
 
     if seed.len() == 0 {
-        return Err("error: password is empty".to_string());
+        return Err("error: hex key is empty".to_string());
     }
 
     let mut key = Key::new(&seed);

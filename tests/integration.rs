@@ -125,14 +125,14 @@ fn roundtrip_square_0xff() {
 
 #[test]
 #[ignore]
-fn roundtrip_password_0xff() {
-    // printf password | md5sum | cut -c 1-32
-    let password_extra = ["-p", "5f4dcc3b5aa765d61d8327deb882cf99"];
+fn roundtrip_hex_key_0xff() {
+    // printf hex_key | md5sum | cut -c 1-32
+    let hex_key_extra = ["-p", "5f4dcc3b5aa765d61d8327deb882cf99"];
 
     roundtrip(
         &vec![0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff],
-        &password_extra,
-        &password_extra,
+        &hex_key_extra,
+        &hex_key_extra,
     );
 }
 
@@ -167,11 +167,11 @@ fn roundtrip_square_random() {
 
 #[test]
 #[ignore]
-fn roundtrip_password_random() {
-    // printf password | md5sum | cut -c 1-32
-    let password_extra = ["-p", "5f4dcc3b5aa765d61d8327deb882cf99"];
+fn roundtrip_hex_key_random() {
+    // printf hex_key | md5sum | cut -c 1-32
+    let hex_key_extra = ["-p", "5f4dcc3b5aa765d61d8327deb882cf99"];
 
-    roundtrip(&random_vec(0xffff), &password_extra, &password_extra);
+    roundtrip(&random_vec(0xffff), &hex_key_extra, &hex_key_extra);
 }
 
 #[test]

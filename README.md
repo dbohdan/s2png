@@ -87,7 +87,7 @@ linker = "/usr/bin/i686-w64-mingw32-gcc"
 ```none
 s2png ("stuff to png") version 0.11.0
 usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
-             [-p password] [-e | -d] file
+             [-p hex-key] [-e | -d] file
 
 Store any data in a PNG image.
 This version can encode files of up to 16777215 bytes.
@@ -97,9 +97,9 @@ This version can encode files of up to 16777215 bytes.
   -w width      set the width of the PNG image output (600 by default)
   -s            make the output image roughly square
   -b text       custom banner text ("" for no banner)
-  -p password   encrypt/decrypt the output with a hexadecimal password
-                using RC4
-                (Warning: do not use this if you want actual secrecy!)
+  -p hex-key    encrypt/decrypt the output with a hexadecimal key
+                using RC4 (Warning: completely insecure! Do not use this if
+                you want actual secrecy.)
 
 Normally s2png detects which operation to perform by the file type. You can
 override this behavior with the following switches:
