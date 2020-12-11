@@ -9,8 +9,7 @@ BUILD_OPTS ?= --target $(TARGET)
 BUILD_OPTS_WITH_DIR ?= $(BUILD_OPTS) --target-dir $(PROJECT_TEMP)
 
 dev: temp-dir
-	# A workaround for https://github.com/rust-lang/rust/issues/46981
-	find Cargo.* src/ tests/ | entr -r sh -c 'cargo check $(BUILD_OPTS_WITH_DIR) < /dev/null'
+	find Cargo.* src/ tests/ | entr -r cargo check $(BUILD_OPTS_WITH_DIR)
 
 debug: temp-dir
 	cargo build $(BUILD_OPTS_WITH_DIR)
