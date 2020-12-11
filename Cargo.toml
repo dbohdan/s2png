@@ -1,6 +1,6 @@
 [package]
 name = "s2png"
-version = "0.10.0"
+version = "0.11.0"
 authors = ["D. Bohdan"]
 edition = "2018"
 
@@ -8,7 +8,7 @@ edition = "2018"
 exitcode = "1.1"
 getopts = "0.2"
 hex = "0.4"
-image = "0.23"
+image = "0.23.12"
 
 [dev-dependencies]
 file_diff = "1.0.0"

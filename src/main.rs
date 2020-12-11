@@ -13,6 +13,7 @@ use s2png::{font, rc4::Key};
 
 use getopts::Options;
 use image;
+use image::codecs::png;
 
 use std::{
     env,
@@ -22,7 +23,7 @@ use std::{
     process::exit,
 };
 
-const VERSION: &'static str = "0.10.0";
+const VERSION: &'static str = "0.11.0";
 const BANNER_HEIGHT: u32 = 8;
 
 const RC4_DROP: usize = 3072;
@@ -306,7 +307,7 @@ fn png_to_file<P: AsRef<Path>, Q: AsRef<Path>>(
     }
 
     // Get rid of the alpha channel.
-    let img_rgb8 = image::DynamicImage::ImageRgb8(img.into_rgb());
+    let img_rgb8 = image::DynamicImage::ImageRgb8(img.into_rgb8());
 
     let mut bytes = img_rgb8.to_bytes();
     let len = bytes.len();
@@ -491,7 +492,30 @@ fn file_to_png<P: AsRef<Path>, Q: AsRef<Path>>(
         ]),
     );
 
-    img.save_with_format(&output, image::ImageFormat::Png)
+    let output_file = File::create(&output).map_err(|err| {
+        (
+            exitcode::CANTCREAT,
+            format!(
+                "error: can't open file `{}' for writing: {}",
+                output.as_ref().display(),
+                &err
+            ),
+        )
+    })?;
+
+    let encoder = png::PngEncoder::new_with_quality(
+        output_file,
+        png::CompressionType::Best,
+        png::FilterType::NoFilter,
+    );
+
+    encoder
+        .encode(
+            &img.as_raw(),
+            image_width,
+            image_height,
+            image::ColorType::Rgb8,
+        )
         .map_err(|err| {
             (
                 exitcode::CANTCREAT,
