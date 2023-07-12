@@ -1,6 +1,5 @@
 # s2png — “stuff to PNG”
 
-[![Build Status](https://travis-ci.org/dbohdan/s2png.svg)](https://travis-ci.org/dbohdan/s2png)
 [![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/dbohdan/s2png?branch=master&svg=true)](https://ci.appveyor.com/project/dbohdan/s2png)
 
 This program encodes arbitrary binary data in PNG images that look like noise
