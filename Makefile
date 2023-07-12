@@ -1,42 +1,11 @@
-PROJECT ?= s2png
-
-BUILD_USER ?= $(USER)
-USER_TEMP ?= /tmp/$(BUILD_USER)
-PROJECT_TEMP ?= $(USER_TEMP)/cargo/$(PROJECT)
-
-TARGET ?= x86_64-unknown-linux-musl
-BUILD_OPTS ?= --target $(TARGET)
-BUILD_OPTS_WITH_DIR ?= $(BUILD_OPTS) --target-dir $(PROJECT_TEMP)
-
-dev: temp-dir
-	find Cargo.* src/ tests/ | entr -r cargo check $(BUILD_OPTS_WITH_DIR)
-
-debug: temp-dir
-	cargo build $(BUILD_OPTS_WITH_DIR)
-
-install:
-	install $(PROJECT_TEMP)/$(TARGET)/release/$(PROJECT) /usr/local/bin
-	strip /usr/local/bin/$(PROJECT)
-
-release: temp-dir
-	cargo build $(BUILD_OPTS_WITH_DIR) --release
-
-run:
-	cargo run $(BUILD_OPTS_WITH_DIR) -- $(ARGS)
-
-temp-dir:
-	@-mkdir -m 0700 $(USER_TEMP)/ 2> /dev/null
-	@-mkdir -p $(PROJECT_TEMP)/ 2> /dev/null
+S2PNG_COMMAND ?= target/debug/s2png
 
 test: test-unit test-integration
 
-test-integration: debug
-	S2PNG_COMMAND="$(PROJECT_TEMP)/$(TARGET)/debug/$(PROJECT)" cargo test $(BUILD_OPTS_WITH_DIR) -- --ignored
+test-integration:
+	S2PNG_COMMAND="$(S2PNG_COMMAND)" cargo test -- --ignored
 
 test-unit:
-	cargo test $(BUILD_OPTS_WITH_DIR)
+	cargo test
 
-uninstall:
-	rm /usr/local/bin/$(PROJECT)
-
-PHONY: dev install release temp-dir test test-integration test-unit uninstall
+PHONY: test test-integration test-unit
