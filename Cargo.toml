@@ -1,8 +1,15 @@
 [package]
 name = "s2png"
 version = "0.11.0"
-authors = ["D. Bohdan"]
+authors = ["D. Bohdan <dbohdan@dbohdan.com>"]
 edition = "2018"
+license = "GPL-2.0"
+readme = "README.md"
+repository = "https://github.com/dbohdan/s2png"
+homepage = "https://github.com/dbohdan/s2png"
+description = "Store any data in PNG images"
+keywords = ["png"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 exitcode = "1.1"
