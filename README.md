@@ -22,6 +22,12 @@ attached to releases on the
 [automatically built](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts)
 for Windows.
 
+### Installing with Cargo
+
+```shell
+cargo install s2png
+```
+
 ### Building on Debian and Ubuntu
 
 Follow the instructions to build a static Linux binary of s2png from source
@@ -40,13 +46,12 @@ rustup target add x86_64-unknown-linux-musl
 sudo apt install build-essential musl-tools
 ```
 
-3\. Clone this repository.  Build and install the binary.
+3\. Clone this repository.  Build the binary.
 
     git clone https://github.com/dbohdan/s2png
     cd s2png
     make test
-    make release
-    sudo make install "BUILD_USER=$USER"
+    make release-linux
 
 ### Cross-compiling for Windows
 
@@ -78,8 +83,7 @@ linker = "/usr/bin/i686-w64-mingw32-gcc"
 
     git clone https://github.com/dbohdan/s2png
     cd s2png
-    RUSTFLAGS="-C panic=abort -C lto" make release TARGET=i686-pc-windows-gnu
-    cp "/tmp/$USER/cargo/s2png/i686-pc-windows-gnu/release/s2png.exe" .
+    make release-windows
 
 
 ## Usage
