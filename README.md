@@ -89,7 +89,7 @@ linker = "/usr/bin/i686-w64-mingw32-gcc"
 ## Usage
 
 ```none
-s2png ("stuff to png") version 0.11.0
+s2png ("stuff to png") version 0.11.1
 usage: s2png [-h] [-o filename] [-w width (600) | -s] [-b text]
              [-p hex-key] [-e | -d] file
 

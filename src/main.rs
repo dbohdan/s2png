@@ -1,7 +1,7 @@
 /*
  *   s2png - "stuff to png"
  *   Copyright (c) 2006 k0wax
- *   Copyright (c) 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 D. Bohdan
+ *   Copyright (c) 2013-2020, 2023 D. Bohdan
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ use std::{
     process::exit,
 };
 
-const VERSION: &'static str = "0.11.0";
+const VERSION: &'static str = "0.11.1";
 const BANNER_HEIGHT: u32 = 8;
 
 const RC4_DROP: usize = 3072;
