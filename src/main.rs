@@ -416,7 +416,7 @@ fn file_to_png<P: AsRef<Path>, Q: AsRef<Path>>(
         as u32
         + banner_height;
 
-    // Prevent buffer corruption when the image has no banner.  If the image has
+    // Prevent buffer corruption when the image has no banner. If the image has
     // certain dimensions the bottom right pixel may be used for buffer and then
     // overwritten by the file size pixel.
     if banner_height == 0 && image_width * image_height * 3 - (len as u32) <= 2

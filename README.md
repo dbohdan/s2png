@@ -4,20 +4,20 @@
 [![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/dbohdan/s2png?branch=master&svg=true)](https://ci.appveyor.com/project/dbohdan/s2png)
 
 This program encodes arbitrary binary data in PNG images that look like noise
-and decodes it back.  It was originally developed by k0wax
-[on SourceForge](http://sourceforge.net/projects/s2png/).  I started this fork
+and decodes it back. It was originally developed by k0wax
+[on SourceForge](http://sourceforge.net/projects/s2png/). I started this fork
 to fix a problem that caused s2png 0.01 to segfault when compiled on a modern
-operating system.  The fork has since accumulated various bug fixes and
-improvements.  Most recently, I have ported it to Rust.  Among other things,
-this makes it easier to distribute s2png as a static binary.  The fork remains
+operating system. The fork has since accumulated various bug fixes and
+improvements. Most recently, I have ported it to Rust. Among other things,
+this makes it easier to distribute s2png as a static binary. The fork remains
 data-compatible with the original if you don't use the toy encryption feature.
 
 
 ## Installation
 
-Prebuilt binaries are available for x86\_64 Linux and i686 Windows.  They are
+Prebuilt binaries are available for x86\_64 Linux and i686 Windows. They are
 attached to releases on the
-[Releases](https://github.com/dbohdan/s2png/releases) page.  Development
+[Releases](https://github.com/dbohdan/s2png/releases) page. Development
 (unstable) binaries are also
 [automatically built](https://ci.appveyor.com/project/dbohdan/s2png/build/artifacts)
 for Windows.
@@ -33,7 +33,7 @@ cargo install s2png
 Follow the instructions to build a static Linux binary of s2png from source
 on recent Debian and Ubuntu.
 
-1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the stable MUSL
+1\. Install [Rustup](https://rustup.rs/). Through Rustup add the stable MUSL
 target for your CPU.
 
 ```sh
@@ -46,7 +46,7 @@ rustup target add x86_64-unknown-linux-musl
 sudo apt install build-essential musl-tools
 ```
 
-3\. Clone this repository.  Build the binary.
+3\. Clone this repository. Build the binary.
 
     git clone https://github.com/dbohdan/s2png
     cd s2png
@@ -58,7 +58,7 @@ sudo apt install build-essential musl-tools
 Follow the instructions to build a 32-bit Intel Windows binary of s2png on
 recent Debian and Ubuntu.
 
-1\. Install [Rustup](https://rustup.rs/).  Through Rustup add the i686 GNU ABI
+1\. Install [Rustup](https://rustup.rs/). Through Rustup add the i686 GNU ABI
 Windows target.
 
 ```sh
@@ -71,7 +71,7 @@ rustup target add i686-pc-windows-gnu
 sudo apt install build-essential mingw-w64
 ```
 
-3\. Configure Cargo for cross-compilation.  Put the following in
+3\. Configure Cargo for cross-compilation. Put the following in
 `~/.cargo/config`.
 
 ```toml
@@ -79,7 +79,7 @@ sudo apt install build-essential mingw-w64
 linker = "/usr/bin/i686-w64-mingw32-gcc"
 ```
 
-4\. Clone this repository.  Build the binary.
+4\. Clone this repository. Build the binary.
 
     git clone https://github.com/dbohdan/s2png
     cd s2png
@@ -139,8 +139,8 @@ Decode `xyz.png` to `decoded.mp3` with
 
 ## License
 
-s2png is licensed under the GNU GPL 2.0.  See the file `LICENSE`.  The
+s2png is licensed under the GNU GPL 2.0. See the file `LICENSE`. The
 implementation of the RC4 streaming cypher in [`src/rc4/mod.rs`](src/rc4/mod.rs)
-is in the public domain.  The font from [libgd](https://github.com/libgd/libgd)
-is distributed under its BSD-like license.  See the file
+is in the public domain. The font from [libgd](https://github.com/libgd/libgd)
+is distributed under its BSD-like license. See the file
 [`src/font/COPYING.libgd`](src/font/COPYING.libgd).

@@ -1,7 +1,7 @@
 #! /bin/sh
 # Use s2png to produce a corrupted version of the input data (for fun).
 # This requires GraphicsMagick or ImageMagick.
-# The original file is not affected.  Try it out on text.
+# The original file is not affected. Try it out on text.
 
 set -e
 
