@@ -8,9 +8,16 @@ cache:
   - '$(CARGO_PATH) -> appveyor.yml, Cargo.lock, Cargo.toml'
 
 install:
+  - cmd: appveyor-retry appveyor DownloadFile https://github.com/projectdiscovery/proxify/releases/download/v0.0.9/proxify_0.0.9_windows_386.zip -FileName proxify.zip
+  - cmd: unzip -n proxify.zip
+  - ps: Start-Process -FilePath proxify.exe -ArgumentList "-config","proxify-config","-http-addr","127.0.0.1:18080"
+  - cmd: timeout /t 5
+  - ps: Import-Certificate -FilePath "proxify-config\cacert.pem" -CertStoreLocation Cert:\LocalMachine\Root
   - cmd: appveyor-retry appveyor DownloadFile https://win.rustup.rs -FileName rustup-init.exe
-  - cmd: rustup-init.exe --default-toolchain %RUST_VERSION% -y
+  - cmd: set HTTP_PROXY=127.0.0.1:18080
+  - cmd: set HTTPS_PROXY=127.0.0.1:18080
   - cmd: set PATH=%CARGO_PATH%\bin;%PATH%
+  - cmd: rustup-init.exe --default-toolchain %RUST_VERSION% -y
 
 build_script:
   - cmd: cargo build
