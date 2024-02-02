@@ -1,8 +1,8 @@
 /*
  * This code is based on the C implementation of RC4 created by John Allen.
- * The original is available from http://www.cypherspace.org/adam/rsa/rc4c.html.
- * It is believed to be in the public domain. The modifications and the Rust
- * port by D. Bohdan are released to the public domain.
+ * The original is available at http://www.cypherspace.org/adam/rsa/rc4c.html.
+ * It is believed to be in the public domain.
+ * D. Bohdan's modifications and Rust port are released to the public domain.
  */
 
 use hex;
