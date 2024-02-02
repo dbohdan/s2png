@@ -1,7 +1,8 @@
 #! /bin/sh
 # Use s2png to produce a corrupted version of the input data (for fun).
 # This requires GraphicsMagick or ImageMagick.
-# The original file is not affected. Try it out on text.
+# The original file is not affected.
+# Try it out on text.
 
 set -eu
 
@@ -46,8 +47,8 @@ if [ ! -e "$input_file" ]; then
     exit 1
 fi
 
-temp_png=/tmp/corruptsh-temp.png
-temp_lossy="/tmp/corruptsh-temp.$format"
+temp_png="$(mktemp /tmp/corruptsh-XXXXXXXX.png)"
+temp_lossy="$(mktemp "/tmp/corruptsh-XXXXXXXX.$format")"
 
 clean_up() {
     rm "$temp_png" "$temp_lossy"
