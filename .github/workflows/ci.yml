@@ -1,10 +1,24 @@
 name: CI
-on: [push]
+on: [push, pull_request]
+
+env:
+  S2PNG_COMMAND: target/debug/s2png
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+        - macos-latest
+        - ubuntu-latest
+        - windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
-    - name: Run CI script
-      run: .github/workflows/ci.sh
+      uses: actions/checkout@v4
+    - name: Run tests
+      run: |
+        cargo build
+
+        cargo test
+        cargo test -- --ignored
