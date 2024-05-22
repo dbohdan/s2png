@@ -1,7 +1,6 @@
 # s2png — “stuff to PNG”
 
 [![GitHub Actions CI status.](https://github.com/dbohdan/s2png/actions/workflows/ci.yml/badge.svg)](https://gthub.com/dbohdan/s2png/actions/workflows/ci.yml)
-[![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/dbohdan/s2png?branch=master&svg=true)](https://ci.appveyor.com/project/dbohdan/s2png)
 
 This program encodes arbitrary binary data in PNG images that look like noise
 and decodes it back. It was originally developed by k0wax
