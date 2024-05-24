@@ -15,10 +15,10 @@ categories = ["command-line-utilities"]
 exitcode = "1.1"
 getopts = "0.2"
 hex = "0.4"
-image = "0.23.12"
+image = { version = "0.25.1", features = ["png"] }
 
 [dev-dependencies]
 file_diff = "1.0.0"
 regex = "1"
-tempfile = "3.1"
-rand = "0.7"
+tempfile = "3.10"
+rand = "0.8"

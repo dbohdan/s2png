@@ -13,7 +13,7 @@ use s2png::{font, rc4::Key};
 
 use getopts::Options;
 use image;
-use image::codecs::png;
+use image::{codecs::png, ImageEncoder};
 
 use std::{
     env,
@@ -309,7 +309,7 @@ fn png_to_file<P: AsRef<Path>, Q: AsRef<Path>>(
     // Get rid of the alpha channel.
     let img_rgb8 = image::DynamicImage::ImageRgb8(img.into_rgb8());
 
-    let mut bytes = img_rgb8.to_bytes();
+    let mut bytes = img_rgb8.into_bytes();
     let len = bytes.len();
 
     let size: usize = bytes[len - 1] as usize
@@ -510,11 +510,11 @@ fn file_to_png<P: AsRef<Path>, Q: AsRef<Path>>(
     );
 
     encoder
-        .encode(
+        .write_image(
             &img.as_raw(),
             image_width,
             image_height,
-            image::ColorType::Rgb8,
+            image::ColorType::Rgb8.into(),
         )
         .map_err(|err| {
             (
