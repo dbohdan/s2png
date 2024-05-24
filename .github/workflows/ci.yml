@@ -1,9 +1,6 @@
 name: CI
 on: [push, pull_request]
 
-env:
-  S2PNG_COMMAND: target/debug/s2png
-
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -16,9 +13,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Set up just
+      uses: extractions/setup-just@v2
     - name: Run tests
       run: |
-        cargo build
-
-        cargo test
-        cargo test -- --ignored
+        just test

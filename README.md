@@ -32,8 +32,8 @@ cargo install s2png
 Follow the instructions to build a static Linux binary of s2png from source
 on recent Debian and Ubuntu.
 
-1\. Install [Rustup](https://rustup.rs/). Through Rustup add the stable MUSL
-target for your CPU.
+1\. Install [Rustup](https://rustup.rs/). Through Rustup, add the stable musl
+libc target for your CPU.
 
 ```sh
 rustup target add x86_64-unknown-linux-musl
@@ -43,14 +43,15 @@ rustup target add x86_64-unknown-linux-musl
 
 ```sh
 sudo apt install build-essential musl-tools
+cargo install just
 ```
 
 3\. Clone this repository. Build the binary.
 
     git clone https://github.com/dbohdan/s2png
     cd s2png
-    make test
-    make release-linux
+    just test
+    just release-linux
 
 ### Cross-compiling for Windows
 
@@ -68,9 +69,10 @@ rustup target add i686-pc-windows-gnu
 
 ```sh
 sudo apt install build-essential mingw-w64
+cargo install just
 ```
 
-3\. Configure Cargo for cross-compilation. Put the following in
+3\. Configure Cargo for cross-compilation. Add the following in
 `~/.cargo/config`.
 
 ```toml
@@ -82,7 +84,7 @@ linker = "/usr/bin/i686-w64-mingw32-gcc"
 
     git clone https://github.com/dbohdan/s2png
     cd s2png
-    make release-windows
+    just release-windows
 
 
 ## Usage
