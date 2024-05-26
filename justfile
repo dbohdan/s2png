@@ -1,3 +1,5 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+
 export S2PNG_COMMAND := "target/debug/s2png"
 
 default: test
