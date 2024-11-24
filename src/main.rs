@@ -23,7 +23,7 @@ use std::{
     process::exit,
 };
 
-const VERSION: &'static str = "0.11.1";
+const VERSION: &'static str = "1.0.0";
 const BANNER_HEIGHT: u32 = 8;
 
 const RC4_DROP: usize = 3072;
