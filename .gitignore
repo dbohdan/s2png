@@ -1,5 +1,6 @@
-/*.deb
-/*.png
+*.deb
+*.png
+*.swp
 /attic
 /README.html
 /target
