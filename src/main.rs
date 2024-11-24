@@ -273,7 +273,7 @@ fn png_to_file<P: AsRef<Path>, Q: AsRef<Path>>(
     output: Q,
     key_opt: &mut Option<Key>,
 ) -> Result<(), (exitcode::ExitCode, String)> {
-    let mut reader = image::io::Reader::open(&input).map_err(|_| {
+    let mut reader = image::ImageReader::open(&input).map_err(|_| {
         (
             exitcode::NOINPUT,
             format!(
