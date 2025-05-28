@@ -22,9 +22,9 @@ release-windows:
     cp target/i686-pc-windows-gnu/release/s2png.exe s2png-win32.exe
     strip s2png-win32.exe
 
-test: debug test-unit test-integration
+test: debug test-unit test-e2e
 
-test-integration:
+test-e2e:
     cargo test -- --ignored
 
 test-unit:
